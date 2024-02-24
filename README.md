@@ -14,6 +14,10 @@ Pinia(状態管理)
 
 - セットアップ：https://pinia.vuejs.org/introduction.html
 
+ルーティング
+
+- セットアップ：https://v3.router.vuejs.org/ja/installation.html
+
 ## テトリスのルールを整理(仕様)
 
 - ボード上をテトリミノが特定の時間毎に 1 ブロックずつ落下していく

@@ -14,7 +14,7 @@ Pinia(状態管理)
 
 - セットアップ：https://pinia.vuejs.org/introduction.html
 
-ルーティング
+vue-router(ルーティング)
 
 - セットアップ：https://v3.router.vuejs.org/ja/installation.html
 

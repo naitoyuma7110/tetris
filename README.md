@@ -1,10 +1,18 @@
 # Vue3 Composition APIでテトリス
 
-## デザインフレームワーク
+## 環境構築メモ
 
-Vuetify3
+Vuetify3(デザインフレームワーク)
 
-- 公式ドキュメントセットアップ：https://vuetifyjs.com/en/getting-started/installation/#using-vite
+- セットアップ：https://vuetifyjs.com/en/getting-started/installation/#using-vite
+
+chromeデバックツール
+
+- https://chromewebstore.google.com/detail/vuejs-devtools/nhdogjmejiglipccpnnnanhbledajbpd
+
+Pinia(状態管理)
+
+- セットアップ：https://pinia.vuejs.org/introduction.html
 
 ## テトリスのルールを整理(仕様)
 

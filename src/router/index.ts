@@ -1,18 +1,21 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
+
+// トップページとゲームページを読み込む
+import TopPage from '../pages/TopPage.vue'
+import PlayPage from '../pages/PlayerPage.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: '/',
-      name: 'home',
-      component: HomeView
+      name: 'TopPage',
+      component: TopPage
     },
     {
-      path: '/about',
-      name: 'about',
-      component: () => import('../views/AboutView.vue')
+      path: '/play',
+      name: 'PlayPage',
+      component: PlayPage
     }
   ]
 })

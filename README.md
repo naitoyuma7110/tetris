@@ -1,8 +1,10 @@
 # Vue3 Composition APIでテトリス
 
-デザインフレームワーク
+## デザインフレームワーク
 
-- Vuetify3:https://vuetifyjs.com/en/getting-started/installation/#using-vite
+Vuetify3
+
+- 公式ドキュメントセットアップ：https://vuetifyjs.com/en/getting-started/installation/#using-vite
 
 ## テトリスのルールを整理(仕様)
 

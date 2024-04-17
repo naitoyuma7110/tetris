@@ -2,7 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 
 // トップページとゲームページを読み込む
 import TopPage from '@/pages/TopPage.vue'
-import PlayPage from '@/pages/PlayerPage.vue'
+import PlayPage from '@/pages/PlayPage.vue'
 import PiniaTest from '@/pages/PiniaTest.vue'
 
 const router = createRouter({

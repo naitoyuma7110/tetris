@@ -77,13 +77,13 @@ export class Tetromino {
     }
   }
 
-  // タイル配置情報を返す
-  getTilePoints(): TetrominoTilePoints {
+  // タイル配置情報へのgetアクセス
+  get tiles(): TetrominoTilePoints {
     return this.tilePoints
   }
 
-  // 回転後のタイル配置情報を返す
-  getRotateTilePoints(): TetrominoTilePoints {
+  // タイル配置を回転後のものに更新する
+  rotateTilePoints(): TetrominoTilePoints {
     // TODO:回転処理を実行してthis.titlePointsを更新
     return this.tilePoints
   }
@@ -96,7 +96,3 @@ export class Tetromino {
     return new Tetromino(type as TETROMINO_TYPE)
   }
 }
-
-const sampleTetromino = Tetromino.newRandomTetromino()
-
-console.log(sampleTetromino.getTilePoints())

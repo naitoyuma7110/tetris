@@ -1,24 +1,32 @@
 <script lang="ts" setup>
-const row = 20;
-const column = 10;
+import { Tetromino } from '@/common/Tetromino';
+import { Field } from '@/common/Field';
 
-const field = new Array(row);
+const tetromino = Tetromino.newRandomTetromino()
 
-// 全カラムを0で埋める
-for (let i = 0; i < row; i++) {
-  const fieldColumn = new Array(column).fill(0);
-  field[i] = fieldColumn;
-}
+const field = new Field()
+const fieldData = field.fieldData
 
-// 画面最上部の左端に縦の I-テトリミノを配置する
-field[0][0] = 1;
-field[1][0] = 1;
-field[2][0] = 1;
-field[3][0] = 1;
+fieldData[0][0] = 1;
+fieldData[1][0] = 1;
+fieldData[1][1] = 1;
+fieldData[2][1] = 1;
+
+fieldData[4][1] = 2;
+fieldData[5][3] = 2;
+fieldData[5][2] = 0;
+fieldData[5][3] = 2;
+
+fieldData[8][9] = 3;
+fieldData[9][8] = 3;
+fieldData[8][6] = 3;
+fieldData[8][7] = 3;
+
+console.log(fieldData)
 
 const classBlockColor = (x: number, y: number): string => {
-  const type = field[y][x];
-  if (type > 0) {
+  const type = fieldData[y][x];
+  if (type) {
     switch (type) {
       case 1:
         return "block-i";
@@ -50,8 +58,8 @@ const classBlockColor = (x: number, y: number): string => {
 
   <div class="container">
     <table class="field" style="border-collapse: collapse">
-      <tr v-for="(row, y) in field" :key="y">
-        <td v-bind:class="classBlockColor(x, y)" v-for="(col, x) in row" :key="() => `${x}${y}`">
+      <tr v-for="(row, y) in fieldData" :key="y">
+        <td v-bind:class="classBlockColor(x, y)" v-for=" (col, x) in row" :key="() => `${x}${y}`">
           {{ col }}
         </td>
       </tr>

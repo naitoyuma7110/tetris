@@ -17,3 +17,5 @@ Pinia(状態管理)
 vue-router(ルーティング)
 
 - セットアップ：https://v3.router.vuejs.org/ja/installation.html
+
+![整理図](https://github.com/naitoyuma7110/tetris/assets/128150297/5e839aae-7993-4b84-ad23-3f4ea47ca77d)

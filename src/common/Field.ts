@@ -1,10 +1,12 @@
+import type { Point, Tetromino } from '@/common/Tetromino'
 type FieldData = number[][]
 
 export class Field {
   private field: number[][]
 
-  // field描画の度にfield情報を引き継ぎインスタンス化する
-  constructor(fieldData?: FieldData) {
+  private tetrominoPoint: Point
+
+  constructor(tetrominoPoint?: Point, fieldData?: FieldData) {
     if (fieldData) {
       this.field = fieldData
     } else {
@@ -20,34 +22,47 @@ export class Field {
 
       this.field = fieldData
     }
+
+    if (tetrominoPoint) {
+      this.tetrominoPoint = tetrominoPoint
+    } else {
+      this.tetrominoPoint = [0, 5]
+    }
   }
 
   get fieldData(): FieldData {
     return this.field
   }
 
-  update = (fieldData: FieldData, position: { x: number; y: number }): void => {
-    for (let i = 0; i < fieldData.length; i++) {
-      const cols = fieldData[i]
-      for (let j = 0; j < cols.length; j++) {
-        const block = cols[j]
-        if (block > 0) {
-          this.field[i + position.y][j + position.x] = block
-        }
-      }
+  get tetrominoData(): Point {
+    return this.tetrominoPoint
+  }
+
+  shiftTetrominoPoint(y: number, x: number) {
+    const currentY = this.tetrominoPoint[0]
+    const currentX = this.tetrominoPoint[1]
+    this.tetrominoPoint = [currentY + y, currentX + x]
+  }
+
+  renderTetromino(Tetromino: Tetromino) {
+    const tilePoints = Tetromino.tiles
+
+    const newTilePoints = []
+
+    for (const point of tilePoints) {
+      const newPoint = [point[0] + this.tetrominoPoint[0], point[1] + this.tetrominoPoint[1]]
+      newTilePoints.push(newPoint)
     }
+
+    newTilePoints.forEach((point) => {
+      this.field[point[0]][point[1]] = Tetromino.tetrominoType
+    })
   }
 
   static deepCopy = (field: Field): Field => {
-    const data = field.fieldData
-    const newFieldData = new Array<Array<number>>(data.length)
-    for (const [i, rows] of data.entries()) {
-      newFieldData[i] = new Array(rows.length)
-      for (const [j] of rows.entries()) {
-        newFieldData[i][j] = data[i][j]
-      }
-    }
-
-    return new Field(newFieldData)
+    // Vueコンポーネントが変更を感知するために新しいメモリ領域に更新データを作成
+    const newFieldData = field.fieldData.map((rows) => rows.slice())
+    const newTetrominoPoint = { ...field.tetrominoData }
+    return new Field(newTetrominoPoint, newFieldData)
   }
 }

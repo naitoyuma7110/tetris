@@ -7,9 +7,9 @@
 */
 
 export type Point = [number, number] // フィールド上の座標(y,x)
-export type TetrominoTilePoints = Array<Point> // テトリミノが持つタイル配置
+export type TilePoints = Array<Point> // テトリミノが持つタイル配置
 
-const tetrominos: Array<TetrominoTilePoints> = [
+const tetrominos: Array<TilePoints> = [
   // 原点を(0,0)とした各種テトリミノのタイル配置を定義
   [
     [0, 0],
@@ -57,7 +57,7 @@ export type TETROMINO_TYPE = (typeof TETROMINO_TYPE)[keyof typeof TETROMINO_TYPE
 export class Tetromino {
   private type: TETROMINO_TYPE
 
-  private tilePoints: TetrominoTilePoints
+  private tilePoints: TilePoints
 
   constructor(type: TETROMINO_TYPE) {
     this.type = type
@@ -78,12 +78,16 @@ export class Tetromino {
   }
 
   // タイル配置情報へのgetアクセス
-  get tiles(): TetrominoTilePoints {
+  get tiles(): TilePoints {
     return this.tilePoints
   }
 
+  get tetrominoType() {
+    return this.type
+  }
+
   // タイル配置を回転後のものに更新する
-  rotateTilePoints(): TetrominoTilePoints {
+  rotateTilePoints(): TilePoints {
     // TODO:回転処理を実行してthis.titlePointsを更新
     return this.tilePoints
   }

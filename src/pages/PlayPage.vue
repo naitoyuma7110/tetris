@@ -7,20 +7,9 @@ const tetromino = Tetromino.newRandomTetromino()
 const field = new Field()
 const fieldData = field.fieldData
 
-fieldData[0][0] = 1;
-fieldData[1][0] = 1;
-fieldData[1][1] = 1;
-fieldData[2][1] = 1;
 
-fieldData[4][1] = 2;
-fieldData[5][3] = 2;
-fieldData[5][2] = 0;
-fieldData[5][3] = 2;
-
-fieldData[8][9] = 3;
-fieldData[9][8] = 3;
-fieldData[8][6] = 3;
-fieldData[8][7] = 3;
+field.shiftTetrominoPoint(3, 1)
+field.renderTetromino(tetromino)
 
 console.log(fieldData)
 

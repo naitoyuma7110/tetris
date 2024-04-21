@@ -18,4 +18,5 @@ vue-router(ルーティング)
 
 - セットアップ：https://v3.router.vuejs.org/ja/installation.html
 
-![整理図](https://github.com/naitoyuma7110/tetris/assets/128150297/5e839aae-7993-4b84-ad23-3f4ea47ca77d)
+![整理図](https://github.com/naitoyuma7110/tetris/assets/128150297/0bf4e477-eece-449b-a2af-f1e090cd5e77)
+

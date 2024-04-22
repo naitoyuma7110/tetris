@@ -1,20 +1,21 @@
 <script lang="ts" setup>
 import { Tetromino } from '@/common/Tetromino';
 import { Field } from '@/common/Field';
+import { reactive } from 'vue';
 
 const tetromino = Tetromino.newRandomTetromino()
 
-const field = new Field()
-const fieldData = field.fieldData
+const field = reactive(new Field())
+
+const handleDownOnClick = (y: number, x: number) => {
+  field.shiftTetromino(tetromino, y, x)
+  console.log(field.fieldData)
+}
 
 
-field.shiftTetrominoPoint(3, 1)
-field.renderTetromino(tetromino)
-
-console.log(fieldData)
 
 const classBlockColor = (x: number, y: number): string => {
-  const type = fieldData[y][x];
+  const type = field.fieldData[y][x];
   if (type) {
     switch (type) {
       case 1:
@@ -47,20 +48,31 @@ const classBlockColor = (x: number, y: number): string => {
 
   <div class="container">
     <table class="field" style="border-collapse: collapse">
-      <tr v-for="(row, y) in fieldData" :key="y">
+      <tr v-for="(row, y) in field.fieldData" :key="y">
         <td v-bind:class="classBlockColor(x, y)" v-for=" (col, x) in row" :key="() => `${x}${y}`">
           {{ col }}
         </td>
       </tr>
     </table>
+    <div>
+      <v-row class="d-flex align-center ms-5">
+        <v-btn icon="mdi-arrow-left-bold-outline" v-on:click="handleDownOnClick(0, -1)"></v-btn>
+        <div class=" d-flex flex-column">
+          <v-btn class="mb-2" icon="mdi-arrow-up-bold-outline" v-on:click="handleDownOnClick(-1, 0)"></v-btn>
+          <v-btn class="mt-2" icon="mdi-arrow-down-bold-outline" v-on:click="handleDownOnClick(1, 0)"></v-btn>
+        </div>
+        <v-btn icon="mdi-arrow-right-bold-outline" v-on:click="handleDownOnClick(0, 1)"> </v-btn>
+        <div div class="ms-5">
+          <v-btn icon="mdi-rotate-right"></v-btn>
+        </div>
+      </v-row>
+    </div>
   </div>
 </template>
 
 <style lang="scss" scoped>
 .container {
   display: flex;
-  justify-content: center;
-  align-items: stretch;
 }
 
 .field {

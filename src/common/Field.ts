@@ -38,14 +38,16 @@ export class Field {
     return this.tetrominoPoint
   }
 
-  shiftTetrominoPoint(y: number, x: number) {
+  shiftTetromino(tetromino: Tetromino, y: number, x: number) {
     const currentY = this.tetrominoPoint[0]
     const currentX = this.tetrominoPoint[1]
     this.tetrominoPoint = [currentY + y, currentX + x]
+
+    this.renderTetromino(tetromino)
   }
 
-  renderTetromino(Tetromino: Tetromino) {
-    const tilePoints = Tetromino.tiles
+  private renderTetromino(tetromino: Tetromino) {
+    const tilePoints = tetromino.tiles
 
     const newTilePoints = []
 
@@ -55,7 +57,7 @@ export class Field {
     }
 
     newTilePoints.forEach((point) => {
-      this.field[point[0]][point[1]] = Tetromino.tetrominoType
+      this.field[point[0]][point[1]] = tetromino.tetrominoType
     })
   }
 

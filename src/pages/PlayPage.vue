@@ -1,21 +1,46 @@
 <script lang="ts" setup>
 import { Tetromino } from '@/common/Tetromino';
 import { Field } from '@/common/Field';
-import { reactive } from 'vue';
+import { ref } from 'vue';
+import type { TETROMINO_TYPE } from '@/common/Tetromino';
 
-const tetromino = Tetromino.newRandomTetromino()
+let tetromino = Tetromino.newRandomTetromino()
+let field = ref(new Field())
+const fieldWithFixed = ref(new Field())
 
-const field = reactive(new Field())
-
-const handleDownOnClick = (y: number, x: number) => {
-  field.shiftTetromino(tetromino, y, x)
-  console.log(field.fieldData)
+const handleShiftOnClick = (y: number, x: number) => {
+  const currentField = fieldWithFixed.value.fieldDeepCopy()
+  field.value = new Field(currentField)
+  tetromino.shift(y, x)
+  const copyField = field.value.getFieldWithRenderTetromino(tetromino)
+  if (field.value.isCollision(copyField)) {
+    console.log("衝突!!")
+    tetromino.shift(-y, -x)
+  } else {
+    field.value = new Field(copyField)
+  }
 }
 
+const handleRotateOnClick = () => {
+  const currentField = fieldWithFixed.value.fieldDeepCopy()
+  field.value = new Field(currentField)
+  tetromino.rotate()
+  const copyField = field.value.getFieldWithRenderTetromino(tetromino)
+  if (!field.value.isCollision(copyField)) {
+    field.value = new Field(copyField)
+  } else {
+    console.log("衝突！！")
+  }
+}
 
+const handleFixTetrominoOnClick = () => {
+  const fieldWithTetromino = field.value.fieldDeepCopy()
+  fieldWithFixed.value = new Field(fieldWithTetromino)
+  tetromino = Tetromino.newRandomTetromino()
+  field.value = new Field(field.value.getFieldWithRenderTetromino(tetromino))
+}
 
-const classBlockColor = (x: number, y: number): string => {
-  const type = field.fieldData[y][x];
+const classBlockColor = (type: TETROMINO_TYPE): string => {
   if (type) {
     switch (type) {
       case 1:
@@ -24,14 +49,6 @@ const classBlockColor = (x: number, y: number): string => {
         return "block-o";
       case 3:
         return "block-s";
-      case 4:
-        return "block-z";
-      case 5:
-        return "block-j";
-      case 6:
-        return "block-l";
-      case 7:
-        return "block-t";
       default:
         return "";
     }
@@ -47,23 +64,31 @@ const classBlockColor = (x: number, y: number): string => {
   <h2>ユーザ名: {{ $route.query.name }}</h2>
 
   <div class="container">
+    <table class="field me-5" style="border-collapse: collapse">
+      <tr v-for="(row, y) in field.field" :key="y">
+        <td v-bind:class="classBlockColor(col as TETROMINO_TYPE)" v-for=" (col, x) in row" :key="() => `${x}${y}`">
+          {{ col }}
+        </td>
+      </tr>
+    </table>
     <table class="field" style="border-collapse: collapse">
-      <tr v-for="(row, y) in field.fieldData" :key="y">
-        <td v-bind:class="classBlockColor(x, y)" v-for=" (col, x) in row" :key="() => `${x}${y}`">
+      <tr v-for="(row, y) in fieldWithFixed.field" :key="y">
+        <td v-bind:class="classBlockColor(col as TETROMINO_TYPE)" v-for=" (col, x) in row" :key="() => `${x}${y}`">
           {{ col }}
         </td>
       </tr>
     </table>
     <div>
       <v-row class="d-flex align-center ms-5">
-        <v-btn icon="mdi-arrow-left-bold-outline" v-on:click="handleDownOnClick(0, -1)"></v-btn>
+        <v-btn icon="mdi-arrow-left-bold-outline" v-on:click="handleShiftOnClick(0, -1)"></v-btn>
         <div class=" d-flex flex-column">
-          <v-btn class="mb-2" icon="mdi-arrow-up-bold-outline" v-on:click="handleDownOnClick(-1, 0)"></v-btn>
-          <v-btn class="mt-2" icon="mdi-arrow-down-bold-outline" v-on:click="handleDownOnClick(1, 0)"></v-btn>
+          <v-btn class="mb-2" icon="mdi-arrow-up-bold-outline" v-on:click="handleShiftOnClick(-1, 0)"></v-btn>
+          <v-btn class="mt-2" icon="mdi-arrow-down-bold-outline" v-on:click="handleShiftOnClick(1, 0)"></v-btn>
         </div>
-        <v-btn icon="mdi-arrow-right-bold-outline" v-on:click="handleDownOnClick(0, 1)"> </v-btn>
+        <v-btn icon="mdi-arrow-right-bold-outline" v-on:click="handleShiftOnClick(0, 1)"> </v-btn>
         <div div class="ms-5">
-          <v-btn icon="mdi-rotate-right"></v-btn>
+          <v-btn class="mx-2" icon="mdi-rotate-right" v-on:click="handleRotateOnClick"></v-btn>
+          <v-btn icon="mdi-check-circle-outline" v-on:click="handleFixTetrominoOnClick"></v-btn>
         </div>
       </v-row>
     </div>

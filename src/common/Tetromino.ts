@@ -1,16 +1,8 @@
-/* 
-  全テトリミノのタイル配置やIDの一覧などは定数としてこのモジュールのglobalに定義する
-
-  tetrominos - 各種テトリミノのタイル配置の一覧定義 
-  TETROMINO_TYPE - テトリミノタイプ<アルファベット>：ID<数字>の対応定義一覧
-  TETROMINO_TYPE(type) - 上記テトリミノタイプからID(数値)を抽出しユニオン型のtype定義
-*/
-
-export type Point = [number, number] // フィールド上の座標(y,x)
-export type TilePoints = Array<Point> // テトリミノが持つタイル配置
+export type Point = [number, number]
+export type TilePoints = Array<Point>
 
 const tetrominos: Array<TilePoints> = [
-  // 原点を(0,0)とした各種テトリミノのタイル配置を定義
+  // 原点を(0,0)とした各種テトリミノのタイル配置を定義[y,x]
   [
     [0, 0],
     [0, -1],
@@ -32,36 +24,26 @@ const tetrominos: Array<TilePoints> = [
 ] as const
 // as const で明示的に変更不可
 
-// テトリミノタイプ(アルファベット)の数字IDの紐づけを定義
+// テトリミノタイプ(アルファベット)と数字IDの紐づけ定義
 const TETROMINO_TYPE = {
-  I: 1, // I-テトリミノ（長いテトリミノ）
-  O: 2, // O-テトリミノ（四角のテトリミノ）
-  S: 3 // S-テトリミノ（S字のテトリミノ）
+  I: 1,
+  O: 2,
+  S: 3
 } as const
 
 // keyof typeof TETROMINO_TYPE = "I" | "O" | "S" | "Z" | "J" | "L" | "T" (オブジェクト:TETROMINO_TYPEのkeyのユニオン型)
 // (typeof TETROMINO_TYPE)[keyof typeof TETROMINO_TYPE] = 1 | 2 | 3 | 4 | 5 | 6 | 7 (↑に対応するvalueを抽出しユニオン型を定義)
 export type TETROMINO_TYPE = (typeof TETROMINO_TYPE)[keyof typeof TETROMINO_TYPE]
 
-/* 
-
-  Tetrominoクラス
-
-  @property type - テトリミノの数字ID
-  @method getId - typeに応じたCSSクラスを返す静的メソッド
-  @method getTilePoints - テトリミノのタイル配置情報を返す
-  @method newRandomTetromino - ランダムなTetrominoインスタンスを返す静的メソッド
-
-*/
-
 export class Tetromino {
   private type: TETROMINO_TYPE
-
   private tilePoints: TilePoints
+  private pointOnField: Point
 
   constructor(type: TETROMINO_TYPE) {
     this.type = type
     this.tilePoints = tetrominos[this.type]
+    this.pointOnField = [0, 5]
   }
 
   static getId(type: TETROMINO_TYPE): string {
@@ -77,19 +59,38 @@ export class Tetromino {
     }
   }
 
-  // タイル配置情報へのgetアクセス
-  get tiles(): TilePoints {
-    return this.tilePoints
+  get tilesOnfield(): TilePoints {
+    const tilesOnfield = []
+
+    for (const point of this.tilePoints) {
+      const pointOnField: Point = [point[0] + this.pointOnField[0], point[1] + this.pointOnField[1]]
+      tilesOnfield.push(pointOnField)
+    }
+    return tilesOnfield
   }
 
   get tetrominoType() {
     return this.type
   }
 
-  // タイル配置を回転後のものに更新する
-  rotateTilePoints(): TilePoints {
-    // TODO:回転処理を実行してthis.titlePointsを更新
-    return this.tilePoints
+  // タイル配置を90度右回転後のものに更新する
+  rotate(): void {
+    const rotatedPoints = []
+
+    for (const [y, x] of this.tilePoints) {
+      // 90度右回転
+      const newPoint: Point = [-x, y]
+      rotatedPoints.push(newPoint)
+    }
+
+    this.tilePoints = rotatedPoints
+  }
+
+  shift(y: number, x: number): void {
+    const newY = this.pointOnField[0] + y
+    const newX = this.pointOnField[1] + x
+
+    this.pointOnField = [newY, newX]
   }
 
   // 自身のインスタンスをランダムに生成

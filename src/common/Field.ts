@@ -1,14 +1,12 @@
-import type { Point, Tetromino } from '@/common/Tetromino'
-type FieldData = number[][]
+import type { Tetromino } from '@/common/Tetromino'
+export type FieldData = number[][]
 
 export class Field {
-  private field: number[][]
+  field: FieldData
 
-  private tetrominoPoint: Point
-
-  constructor(tetrominoPoint?: Point, fieldData?: FieldData) {
-    if (fieldData) {
-      this.field = fieldData
+  constructor(field?: FieldData) {
+    if (field) {
+      this.field = field
     } else {
       const row = 20
       const column = 10
@@ -22,49 +20,33 @@ export class Field {
 
       this.field = fieldData
     }
-
-    if (tetrominoPoint) {
-      this.tetrominoPoint = tetrominoPoint
-    } else {
-      this.tetrominoPoint = [0, 5]
-    }
   }
 
-  get fieldData(): FieldData {
-    return this.field
-  }
-
-  get tetrominoData(): Point {
-    return this.tetrominoPoint
-  }
-
-  shiftTetromino(tetromino: Tetromino, y: number, x: number) {
-    const currentY = this.tetrominoPoint[0]
-    const currentX = this.tetrominoPoint[1]
-    this.tetrominoPoint = [currentY + y, currentX + x]
-
-    this.renderTetromino(tetromino)
-  }
-
-  private renderTetromino(tetromino: Tetromino) {
-    const tilePoints = tetromino.tiles
-
-    const newTilePoints = []
-
-    for (const point of tilePoints) {
-      const newPoint = [point[0] + this.tetrominoPoint[0], point[1] + this.tetrominoPoint[1]]
-      newTilePoints.push(newPoint)
-    }
-
-    newTilePoints.forEach((point) => {
-      this.field[point[0]][point[1]] = tetromino.tetrominoType
+  isCollision(newField: FieldData) {
+    newField.forEach((row, rowIndex) => {
+      row.forEach((col, colIndex) => {
+        if (this.field[rowIndex][colIndex] !== 0 && col !== 0) {
+          return true
+        }
+      })
     })
+    return false
   }
 
-  static deepCopy = (field: Field): Field => {
-    // Vueコンポーネントが変更を感知するために新しいメモリ領域に更新データを作成
-    const newFieldData = field.fieldData.map((rows) => rows.slice())
-    const newTetrominoPoint = { ...field.tetrominoData }
-    return new Field(newTetrominoPoint, newFieldData)
+  fieldDeepCopy() {
+    const deepCopyField = this.field.map((row) => [...row])
+    return deepCopyField
+  }
+
+  getFieldWithRenderTetromino(tetromino: Tetromino) {
+    const points = tetromino.tilesOnfield
+
+    const copyField = this.fieldDeepCopy()
+
+    points.forEach((point) => {
+      copyField[point[0]][point[1]] = tetromino.tetrominoType
+    })
+
+    return copyField
   }
 }

@@ -8,36 +8,35 @@ let tetromino = Tetromino.newRandomTetromino()
 let field = ref(new Field())
 const fieldWithFixed = ref(new Field())
 
+
 const handleShiftOnClick = (y: number, x: number) => {
-  const currentField = fieldWithFixed.value.fieldDeepCopy()
-  field.value = new Field(currentField)
-  tetromino.shift(y, x)
-  const copyField = field.value.getFieldWithRenderTetromino(tetromino)
-  if (field.value.isCollision(copyField)) {
+  const newTetromino = tetromino.createCopy()
+  newTetromino.shift(y, x)
+  if (fieldWithFixed.value.isCollision(newTetromino)) {
     console.log("衝突!!")
-    tetromino.shift(-y, -x)
-  } else {
-    field.value = new Field(copyField)
+    return
   }
+  tetromino = newTetromino
+  field.value = fieldWithFixed.value.createCopy()
+  field.value = field.value.createFieldWithRenderTetromino(tetromino)
 }
 
 const handleRotateOnClick = () => {
-  const currentField = fieldWithFixed.value.fieldDeepCopy()
-  field.value = new Field(currentField)
-  tetromino.rotate()
-  const copyField = field.value.getFieldWithRenderTetromino(tetromino)
-  if (!field.value.isCollision(copyField)) {
-    field.value = new Field(copyField)
-  } else {
-    console.log("衝突！！")
+  const newTetromino = tetromino.createCopy()
+  newTetromino.rotate()
+  if (fieldWithFixed.value.isCollision(newTetromino)) {
+    console.log("衝突!!")
+    return
   }
+  tetromino = newTetromino
+  field.value = fieldWithFixed.value.createCopy()
+  field.value = field.value.createFieldWithRenderTetromino(tetromino)
 }
 
 const handleFixTetrominoOnClick = () => {
-  const fieldWithTetromino = field.value.fieldDeepCopy()
-  fieldWithFixed.value = new Field(fieldWithTetromino)
+  fieldWithFixed.value = field.value.createCopy()
   tetromino = Tetromino.newRandomTetromino()
-  field.value = new Field(field.value.getFieldWithRenderTetromino(tetromino))
+  field.value = field.value.createFieldWithRenderTetromino(tetromino)
 }
 
 const classBlockColor = (type: TETROMINO_TYPE): string => {

@@ -6,11 +6,9 @@ Vuetify3(デザインフレームワーク)
 
 - セットアップ：https://vuetifyjs.com/en/getting-started/installation/#using-vite
 
-― MDIの導入：https://mdizenn.dev/shachihoko/articles/44beb04a9ec02a
+- MDIの導入：https://mdizenn.dev/shachihoko/articles/44beb04a9ec02a
 
-chromeデバックツール
-
-- https://chromewebstore.google.com/detail/vuejs-devtools/nhdogjmejiglipccpnnnanhbledajbpd
+chromeデバックツール：https://chromewebstore.google.com/detail/vuejs-devtools/nhdogjmejiglipccpnnnanhbledajbpd
 
 Pinia(状態管理)
 

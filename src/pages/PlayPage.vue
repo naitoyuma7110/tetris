@@ -47,11 +47,19 @@ const classBlockColor = (type: TETROMINO_TYPE): string => {
         return "block-o";
       case 3:
         return "block-s";
+      case 4:
+        return "block-z";
+      case 5:
+        return "block-j";
+      case 6:
+        return "block-l";
+      case 7:
+        return "block-t";
       default:
-        return "";
+        return "block-blank";
     }
   }
-  return ""
+  return "block-blank";
 }
 
 </script>
@@ -63,7 +71,7 @@ const classBlockColor = (type: TETROMINO_TYPE): string => {
   <div class="container">
     <div class="game-board">
       <div class="game-board-row" v-for="(row, y) in field.field" :key="y">
-        <span class="game-board-col" v-bind:class="classBlockColor(col as TETROMINO_TYPE)" v-for=" (col, x) in row"
+        <span class="game-board-col" v-bind:class="classBlockColor(col as (TETROMINO_TYPE))" v-for=" (col, x) in row"
           :key="() => `${x}${y}`">
           {{ col }}
         </span>
@@ -76,7 +84,7 @@ const classBlockColor = (type: TETROMINO_TYPE): string => {
           <v-btn class="mb-2" icon="mdi-arrow-up-bold-outline" v-on:click="handleShiftOnClick(-1, 0)"></v-btn>
           <v-btn class="mt-2" icon="mdi-arrow-down-bold-outline" v-on:click="handleShiftOnClick(1, 0)"></v-btn>
         </div>
-        <v-btn icon="mdi-arrow-right-bold-outline" v-on:click="handleShiftOnClick(0, 1)"> </v-btn>
+        <v-btn icon="mdi-arrow-right-bold-outline" v-on:click="handleShiftOnClick(0, 1)"></v-btn>
       </v-row>
       <v-row class="align-center justify-center mt-5">
         <v-btn class="mx-2" icon="mdi-rotate-right" v-on:click="handleRotateOnClick"></v-btn>

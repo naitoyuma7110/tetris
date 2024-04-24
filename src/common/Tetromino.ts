@@ -3,6 +3,8 @@ export type TilePoints = Point[]
 
 const tetrominos: TilePoints[] = [
   // 原点を(0,0)とした各種テトリミノのタイル配置を定義[y,x]
+  // 1から始まるIDと紐づけたいので配列1番目にダミーを設置(使用しない)
+  [[0, 0]],
   [
     [0, 0],
     [0, -1],
@@ -17,22 +19,40 @@ const tetrominos: TilePoints[] = [
   ],
   [
     [0, 0],
-    [0, -1],
+    [0, 1],
     [1, 0],
+    [1, -1]
+  ],
+  [
+    [0, 0],
+    [0, 1],
+    [0, -1],
+    [1, -1]
+  ],
+  [
+    [0, 0],
+    [0, -1],
+    [0, 1],
     [1, 1]
+  ],
+  [
+    [0, 0],
+    [0, 1],
+    [0, -1],
+    [1, 0]
   ]
 ] as const
-// as const で明示的に変更不可
 
-// テトリミノタイプ(アルファベット)と数字IDの紐づけ定義
 const TETROMINO_TYPE = {
   I: 1,
   O: 2,
-  S: 3
+  S: 3,
+  Z: 4,
+  J: 5,
+  L: 6,
+  T: 7
 } as const
 
-// keyof typeof TETROMINO_TYPE = "I" | "O" | "S" | "Z" | "J" | "L" | "T" (オブジェクト:TETROMINO_TYPEのkeyのユニオン型)
-// (typeof TETROMINO_TYPE)[keyof typeof TETROMINO_TYPE] = 1 | 2 | 3 | 4 | 5 | 6 | 7 (↑に対応するvalueを抽出しユニオン型を定義)
 export type TETROMINO_TYPE = (typeof TETROMINO_TYPE)[keyof typeof TETROMINO_TYPE]
 
 export class Tetromino {
@@ -69,7 +89,7 @@ export class Tetromino {
     return tilesOnfield
   }
 
-  get tetrominoType() {
+  get tetrominoType(): TETROMINO_TYPE {
     return this.type
   }
 
@@ -103,7 +123,7 @@ export class Tetromino {
 
   // インスタンスをランダムに生成
   static newRandomTetromino(): Tetromino {
-    const tetrominoTypes = tetrominos.length - 1 // 3種類
+    const tetrominoTypes = tetrominos.length - 1
     const type = Math.floor(Math.random() * tetrominoTypes) + 1
 
     return new Tetromino(type as TETROMINO_TYPE)

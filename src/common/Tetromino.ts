@@ -1,7 +1,7 @@
 export type Point = [number, number]
-export type TilePoints = Array<Point>
+export type TilePoints = Point[]
 
-const tetrominos: Array<TilePoints> = [
+const tetrominos: TilePoints[] = [
   // 原点を(0,0)とした各種テトリミノのタイル配置を定義[y,x]
   [
     [0, 0],
@@ -18,8 +18,8 @@ const tetrominos: Array<TilePoints> = [
   [
     [0, 0],
     [0, -1],
-    [-1, 0],
-    [-1, 1]
+    [1, 0],
+    [1, 1]
   ]
 ] as const
 // as const で明示的に変更不可
@@ -37,8 +37,8 @@ export type TETROMINO_TYPE = (typeof TETROMINO_TYPE)[keyof typeof TETROMINO_TYPE
 
 export class Tetromino {
   private type: TETROMINO_TYPE
-  private tilePoints: TilePoints
-  private pointOnField: Point
+  tilePoints: TilePoints
+  pointOnField: Point
 
   constructor(type: TETROMINO_TYPE) {
     this.type = type
@@ -93,7 +93,15 @@ export class Tetromino {
     this.pointOnField = [newY, newX]
   }
 
-  // 自身のインスタンスをランダムに生成
+  createCopy(): Tetromino {
+    const newTetromino = new Tetromino(this.type)
+    const copyTilePoints: TilePoints = this.tilePoints.map((row) => [...row])
+    newTetromino.tilePoints = copyTilePoints
+    newTetromino.pointOnField = this.pointOnField
+    return newTetromino
+  }
+
+  // インスタンスをランダムに生成
   static newRandomTetromino(): Tetromino {
     const tetrominoTypes = tetrominos.length - 1 // 3種類
     const type = Math.floor(Math.random() * tetrominoTypes) + 1

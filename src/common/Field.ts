@@ -21,32 +21,40 @@ export class Field {
       this.field = fieldData
     }
   }
-
-  isCollision(newField: FieldData) {
-    newField.forEach((row, rowIndex) => {
-      row.forEach((col, colIndex) => {
-        if (this.field[rowIndex][colIndex] !== 0 && col !== 0) {
-          return true
-        }
-      })
-    })
-    return false
-  }
-
-  fieldDeepCopy() {
+  private getFieldDeepCopy(): FieldData {
     const deepCopyField = this.field.map((row) => [...row])
     return deepCopyField
   }
 
-  getFieldWithRenderTetromino(tetromino: Tetromino) {
-    const points = tetromino.tilesOnfield
+  createCopy(): Field {
+    const field = this.getFieldDeepCopy()
+    return new Field(field)
+  }
 
-    const copyField = this.fieldDeepCopy()
+  // 新しいTetrominoが現在のfieldに描画可能か(衝突しないか)判定する
+  isCollision(newTetromino: Tetromino) {
+    const points = newTetromino.tilesOnfield
+    const copyField = this.getFieldDeepCopy()
+    let isCollision = false
+
+    points.forEach((point) => {
+      // copyField[row]の存在チェック後、copyField[row][col]のチェックを実行
+      if (!copyField[point[0]] || copyField[point[0]][point[1]] !== 0) {
+        isCollision = true
+      }
+    })
+
+    return isCollision
+  }
+
+  createFieldWithRenderTetromino(tetromino: Tetromino) {
+    const points = tetromino.tilesOnfield
+    const copyField = this.getFieldDeepCopy()
 
     points.forEach((point) => {
       copyField[point[0]][point[1]] = tetromino.tetrominoType
     })
 
-    return copyField
+    return new Field(copyField)
   }
 }

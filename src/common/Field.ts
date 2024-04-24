@@ -32,7 +32,7 @@ export class Field {
   }
 
   // 新しいTetrominoが現在のfieldに描画可能か(衝突しないか)判定する
-  isCollision(newTetromino: Tetromino) {
+  isCollision(newTetromino: Tetromino): boolean {
     const points = newTetromino.tilesOnfield
     const copyField = this.getFieldDeepCopy()
     let isCollision = false
@@ -47,7 +47,7 @@ export class Field {
     return isCollision
   }
 
-  createFieldWithRenderTetromino(tetromino: Tetromino) {
+  createFieldWithRenderTetromino(tetromino: Tetromino): Field {
     const points = tetromino.tilesOnfield
     const copyField = this.getFieldDeepCopy()
 

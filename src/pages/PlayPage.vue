@@ -8,6 +8,7 @@ let tetromino = Tetromino.newRandomTetromino()
 let field = ref(new Field())
 const fieldWithFixed = ref(new Field())
 
+
 const handleShiftOnClick = (y: number, x: number) => {
   const newTetromino = tetromino.createCopy()
   newTetromino.shift(y, x)
@@ -33,10 +34,15 @@ const handleRotateOnClick = () => {
 }
 
 const handleFixTetrominoOnClick = () => {
-  fieldWithFixed.value = field.value.createCopy()
   tetromino = Tetromino.newRandomTetromino()
+  fieldWithFixed.value = field.value.createCopy()
   field.value = field.value.createFieldWithRenderTetromino(tetromino)
 }
+
+// 1秒ごとに実行する関数
+const intervalId = setInterval(() => {
+  handleShiftOnClick(1, 0);
+}, 1000);
 
 const classBlockColor = (type: TETROMINO_TYPE): string => {
   if (type) {

@@ -2,7 +2,7 @@
 import { reactive } from "vue";
 import { useRouter } from "vue-router";
 
-const state = reactive({ name: "" });
+const state = reactive({ name: "Guests" });
 const router = useRouter();
 
 const startGame = () => {
@@ -11,15 +11,12 @@ const startGame = () => {
 </script>
 
 <template>
-  <div class="text-center">
-    <h1 class="text-left">トップ画面</h1>
-    <v-text-field v-model="state.name" placeholder="名前を入力してください (10文字以内)" maxlength="10"></v-text-field>
-    <v-btn v-on:click="startGame()">
+  <v-row class="justify-center w-50">
+    <v-text-field v-model="state.name" variant="underlined" label="Your name" maxlength="10" class="me-10" />
+    <v-btn v-on:click="startGame()" variant="outlined">
       Game Start
     </v-btn>
-  </div>
+  </v-row>
 </template>
 
-<!-- state.name 確認用のタグのスタイルを指定する -->
 <style scoped></style>
-

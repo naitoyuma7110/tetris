@@ -8,7 +8,6 @@ let tetromino = Tetromino.newRandomTetromino()
 let field = ref(new Field())
 const fieldWithFixed = ref(new Field())
 
-
 const handleShiftOnClick = (y: number, x: number) => {
   const newTetromino = tetromino.createCopy()
   newTetromino.shift(y, x)
@@ -58,37 +57,30 @@ const classBlockColor = (type: TETROMINO_TYPE): string => {
 </script>
 
 <template>
-  <h1>プレイ画面</h1>
-
-  <h2>ユーザ名: {{ $route.query.name }}</h2>
+  <p>プレイ画面</p>
+  <p>ユーザ名: {{ $route.query.name }}</p>
 
   <div class="container">
-    <table class="field me-5" style="border-collapse: collapse">
-      <tr v-for="(row, y) in field.field" :key="y">
-        <td v-bind:class="classBlockColor(col as TETROMINO_TYPE)" v-for=" (col, x) in row" :key="() => `${x}${y}`">
+    <div class="game-board">
+      <div class="game-board-row" v-for="(row, y) in field.field" :key="y">
+        <span class="game-board-col" v-bind:class="classBlockColor(col as TETROMINO_TYPE)" v-for=" (col, x) in row"
+          :key="() => `${x}${y}`">
           {{ col }}
-        </td>
-      </tr>
-    </table>
-    <table class="field" style="border-collapse: collapse">
-      <tr v-for="(row, y) in fieldWithFixed.field" :key="y">
-        <td v-bind:class="classBlockColor(col as TETROMINO_TYPE)" v-for=" (col, x) in row" :key="() => `${x}${y}`">
-          {{ col }}
-        </td>
-      </tr>
-    </table>
-    <div>
-      <v-row class="d-flex align-center ms-5">
+        </span>
+      </div>
+    </div>
+    <div class="w-25">
+      <v-row class="align-center justify-center">
         <v-btn icon="mdi-arrow-left-bold-outline" v-on:click="handleShiftOnClick(0, -1)"></v-btn>
-        <div class=" d-flex flex-column">
+        <div class="d-flex flex-column">
           <v-btn class="mb-2" icon="mdi-arrow-up-bold-outline" v-on:click="handleShiftOnClick(-1, 0)"></v-btn>
           <v-btn class="mt-2" icon="mdi-arrow-down-bold-outline" v-on:click="handleShiftOnClick(1, 0)"></v-btn>
         </div>
         <v-btn icon="mdi-arrow-right-bold-outline" v-on:click="handleShiftOnClick(0, 1)"> </v-btn>
-        <div div class="ms-5">
-          <v-btn class="mx-2" icon="mdi-rotate-right" v-on:click="handleRotateOnClick"></v-btn>
-          <v-btn icon="mdi-check-circle-outline" v-on:click="handleFixTetrominoOnClick"></v-btn>
-        </div>
+      </v-row>
+      <v-row class="align-center justify-center mt-5">
+        <v-btn class="mx-2" icon="mdi-rotate-right" v-on:click="handleRotateOnClick"></v-btn>
+        <v-btn class="mx-2" icon="mdi-check-circle-outline" v-on:click="handleFixTetrominoOnClick"></v-btn>
       </v-row>
     </div>
   </div>
@@ -96,19 +88,29 @@ const classBlockColor = (type: TETROMINO_TYPE): string => {
 
 <style lang="scss" scoped>
 .container {
+  margin-top: 20px;
   display: flex;
-}
+  justify-content: center;
 
-.field {
-  width: 400px;
-  border: ridge 0.4em #2c3e50;
-  border-top: none;
+  .game-board {
+    border: 1px solid #ccc;
+    border-top: none;
+
+    &-row {
+      display: flex;
+      width: 100%;
+    }
+
+    &-col {
+      width: 30px;
+      height: 30px;
+      text-align: center;
+      border: 1px solid #EEE
+    }
+  }
 }
 
 .block {
-  color: red;
-  border: 1px solid #95a5a6;
-
   &-i {
     background: #3498db;
   }

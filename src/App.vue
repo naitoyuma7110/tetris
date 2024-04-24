@@ -15,8 +15,5 @@ console.log(baseUrl); // "/my-app/"
     <v-main>
       <router-view />
     </v-main>
-    <v-footer app>
-      footer
-    </v-footer>
   </v-app>
 </template>

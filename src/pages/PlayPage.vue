@@ -13,7 +13,7 @@ field.value = field.value.createFieldWithRenderTetromino(tetromino)
 const fieldWithFixed = ref(new Field())
 
 const handleShiftTetromino = (y: number, x: number) => {
-  const newTetromino = tetromino.createCopy()
+  const newTetromino = tetromino.copyInstance()
   newTetromino.shift(y, x)
   if (fieldWithFixed.value.isCollision(newTetromino)) {
     console.log("衝突!!")
@@ -23,25 +23,25 @@ const handleShiftTetromino = (y: number, x: number) => {
     return
   }
   tetromino = newTetromino
-  field.value = fieldWithFixed.value.createCopy()
+  field.value = fieldWithFixed.value.copyInstance()
   field.value = field.value.createFieldWithRenderTetromino(tetromino)
 }
 
 const handleRotateTetromino = () => {
-  const newTetromino = tetromino.createCopy()
+  const newTetromino = tetromino.copyInstance()
   newTetromino.rotate()
   if (fieldWithFixed.value.isCollision(newTetromino)) {
     console.log("衝突!!")
     return
   }
   tetromino = newTetromino
-  field.value = fieldWithFixed.value.createCopy()
+  field.value = fieldWithFixed.value.copyInstance()
   field.value = field.value.createFieldWithRenderTetromino(tetromino)
 }
 
 const handleFixTetromino = () => {
   tetromino = Tetromino.newRandomTetromino()
-  fieldWithFixed.value = field.value.createCopy()
+  fieldWithFixed.value = field.value.copyInstance(true)
   field.value = field.value.createFieldWithRenderTetromino(tetromino)
 }
 
@@ -131,7 +131,7 @@ onBeforeUnmount(() => {
 
   <div class="container">
     <div class="game-board">
-      <div class="game-board-row" v-for="(row, y) in field.field" :key="y">
+      <div class="game-board-row" v-for="(row, y) in field.fieldData" :key="y">
         <span class="game-board-col" v-bind:class="classBlockColor(col as (TETROMINO_TYPE))" v-for=" (col, x) in row"
           :key="() => `${x}${y}`">
           {{ col }}
@@ -152,7 +152,7 @@ onBeforeUnmount(() => {
         <v-btn class="mx-2" icon="mdi-check-circle-outline" v-on:click="handleFixTetromino"></v-btn>
       </v-row>
       <v-row class="mt-10">
-        <v-slider v-model="fallSpeed" :max="1000" :min="0" step="10" class="mx-5" hide-details>
+        <v-slider v-model="fallSpeed" :max="1000" :min="1" step="10" class="mx-5" hide-details>
         </v-slider>
         {{ `1 / ${fallSpeed} ms` }}
       </v-row>

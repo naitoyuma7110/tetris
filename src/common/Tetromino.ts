@@ -57,8 +57,8 @@ export type TETROMINO_TYPE = (typeof TETROMINO_TYPE)[keyof typeof TETROMINO_TYPE
 
 export class Tetromino {
   private type: TETROMINO_TYPE
-  tilePoints: TilePoints
-  pointOnField: Point
+  private tilePoints: TilePoints
+  private pointOnField: Point
 
   constructor(type: TETROMINO_TYPE) {
     this.type = type
@@ -100,15 +100,13 @@ export class Tetromino {
     this.pointOnField = [newY, newX]
   }
 
-  createCopy(): Tetromino {
+  copyInstance(): Tetromino {
     const newTetromino = new Tetromino(this.type)
-    const copyTilePoints: TilePoints = this.tilePoints.map((row) => [...row])
-    newTetromino.tilePoints = copyTilePoints
+    newTetromino.tilePoints = this.tilePoints.map((row) => [...row])
     newTetromino.pointOnField = this.pointOnField
     return newTetromino
   }
 
-  // インスタンスをランダムに生成
   static newRandomTetromino(): Tetromino {
     const tetrominoTypes = tetrominos.length - 1
     const type = Math.floor(Math.random() * tetrominoTypes) + 1

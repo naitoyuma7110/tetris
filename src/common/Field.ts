@@ -1,6 +1,9 @@
 import type { Tetromino } from '@/common/Tetromino'
 export type FieldData = number[][]
 
+const row = 20
+const column = 10
+
 export class Field {
   field: FieldData
 
@@ -8,9 +11,6 @@ export class Field {
     if (field) {
       this.field = field
     } else {
-      const row = 20
-      const column = 10
-
       const fieldData = new Array<Array<number>>(row)
 
       for (let i = 0; i < row; i++) {
@@ -24,6 +24,42 @@ export class Field {
   private getFieldDeepCopy(): FieldData {
     const deepCopyField = this.field.map((row) => [...row])
     return deepCopyField
+  }
+
+  private columnVanish(field: FieldData) {
+    // 列に0以外のcolを含むか判定し削除対象の列インデックスを保持
+    const columnsToRemove: number[] = []
+
+    for (let row = 0; row < field.length; row++) {
+      let allTiles = true
+      for (let col = 0; col < field.length; col++) {
+        if (field[row][col] === 0) {
+          allTiles = false
+          break
+        }
+      }
+      if (allTiles) {
+        columnsToRemove.push(row)
+      }
+    }
+
+    // 削除対象の列を削除し配列を下方にシフトする
+    const fieldRemovedColum: number[][] = []
+
+    for (let row = 0; row < field.length; row++) {
+      let newRow: number[]
+      if (!columnsToRemove.includes(row)) {
+        newRow = field[row]
+        fieldRemovedColum.push(newRow)
+      }
+    }
+
+    for (let i = 1; i <= columnsToRemove.length; i++) {
+      const blankRow: number[] = Array(column).fill(0)
+      fieldRemovedColum.unshift(blankRow)
+    }
+
+    return fieldRemovedColum
   }
 
   createCopy(): Field {
@@ -55,6 +91,8 @@ export class Field {
       copyField[point[0]][point[1]] = tetromino.tetrominoType
     })
 
-    return new Field(copyField)
+    const newField = this.columnVanish(copyField)
+
+    return new Field(newField)
   }
 }

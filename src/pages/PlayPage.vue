@@ -4,12 +4,9 @@ import { Field } from '@/common/Field';
 import { ref, watch } from 'vue';
 import type { TETROMINO_TYPE } from '@/common/Tetromino';
 import { onMounted } from 'vue';
-import { onBeforeUnmount } from 'vue';
 
 let tetromino = Tetromino.newRandomTetromino()
-let field = ref(new Field())
-field.value = field.value.createFieldWithRenderTetromino(tetromino)
-
+const field = ref(new Field())
 const fieldWithFixed = ref(new Field())
 
 const handleShiftTetromino = (y: number, x: number) => {
@@ -43,6 +40,10 @@ const handleFixTetromino = () => {
   tetromino = Tetromino.newRandomTetromino()
   fieldWithFixed.value = field.value.copyInstance(true)
   field.value = field.value.createFieldWithRenderTetromino(tetromino)
+  if (fieldWithFixed.value.isGameOver) {
+    clearInterval(intervalId)
+    alert("Game Over")
+  }
 }
 
 const fallSpeed = ref<number>(500);
@@ -60,7 +61,7 @@ watch(fallSpeed, (newFallSpeed) => {
   console.log(newFallSpeed)
 })
 
-const classBlockColor = (type: TETROMINO_TYPE): string => {
+const getBlockClass = (type: TETROMINO_TYPE): string => {
   if (type) {
     switch (type) {
       case 1:
@@ -88,39 +89,29 @@ const handleKeyPress = (event: KeyboardEvent) => {
   switch (event.key) {
     case 'ArrowUp':
       handleShiftTetromino(-1, 0)
-      console.log('↑キーが押されました');
       break;
     case 'ArrowDown':
       handleShiftTetromino(1, 0)
-      console.log('↓キーが押されました');
       break;
     case 'ArrowLeft':
       handleShiftTetromino(0, -1)
-      console.log('←キーが押されました');
       break;
     case 'ArrowRight':
       handleShiftTetromino(0, 1)
-      console.log('→キーが押されました');
       break;
   }
 
   if (event.key !== 'Space' && event.code === 'Space') {
     handleRotateTetromino()
-    console.log('Spaceキーが押されました');
   }
-  // Enter キーを取得する
   if (event.key !== 'Enter' && event.code === 'Enter') {
     handleFixTetromino()
-    console.log('Enterキーが押されました');
   }
 }
 
 onMounted(() => {
   document.addEventListener('keydown', handleKeyPress);
-});
-
-onBeforeUnmount(() => {
-  document.removeEventListener('keydown', handleKeyPress);
+  field.value = field.value.createFieldWithRenderTetromino(tetromino)
 });
 
 </script>
@@ -132,7 +123,7 @@ onBeforeUnmount(() => {
   <div class="container">
     <div class="game-board">
       <div class="game-board-row" v-for="(row, y) in field.fieldData" :key="y">
-        <span class="game-board-col" v-bind:class="classBlockColor(col as (TETROMINO_TYPE))" v-for=" (col, x) in row"
+        <span class="game-board-col" v-bind:class="getBlockClass(col as (TETROMINO_TYPE))" v-for=" (col, x) in row"
           :key="() => `${x}${y}`">
           {{ col }}
         </span>
@@ -156,6 +147,7 @@ onBeforeUnmount(() => {
         </v-slider>
         {{ `1 / ${fallSpeed} ms` }}
       </v-row>
+      <p class="ms-2 mt-10">SCORE: {{ fieldWithFixed.score }}</p>
     </div>
   </div>
 </template>

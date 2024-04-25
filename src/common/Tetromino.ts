@@ -53,6 +53,8 @@ const TETROMINO_TYPE = {
   T: 7
 } as const
 
+export const DROP_POINT: Point = [0, 5]
+
 export type TETROMINO_TYPE = (typeof TETROMINO_TYPE)[keyof typeof TETROMINO_TYPE]
 
 export class Tetromino {

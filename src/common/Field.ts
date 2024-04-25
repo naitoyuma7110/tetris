@@ -5,7 +5,8 @@ const row = 20
 const column = 10
 
 export class Field {
-  field: FieldData
+  private field: FieldData
+  private totalRemovedColumn: number = 0
 
   constructor(field?: FieldData) {
     if (field) {
@@ -26,14 +27,18 @@ export class Field {
     return deepCopyField
   }
 
-  private columnVanish(field: FieldData) {
+  get fieldData() {
+    return this.field
+  }
+
+  private removeColumn() {
     // 列に0以外のcolを含むか判定し削除対象の列インデックスを保持
     const columnsToRemove: number[] = []
 
-    for (let row = 0; row < field.length; row++) {
+    for (let row = 0; row < this.field.length; row++) {
       let isAllTile = true
-      for (let col = 0; col < field.length; col++) {
-        if (field[row][col] === 0) {
+      for (let col = 0; col < this.field.length; col++) {
+        if (this.field[row][col] === 0) {
           isAllTile = false
           break
         }
@@ -46,10 +51,10 @@ export class Field {
     // 削除対象の列を削除し配列を下方にシフトする
     const fieldRemovedColum: number[][] = []
 
-    for (let row = 0; row < field.length; row++) {
+    for (let row = 0; row < this.field.length; row++) {
       let newRow: number[]
       if (!columnsToRemove.includes(row)) {
-        newRow = field[row]
+        newRow = this.field[row]
         fieldRemovedColum.push(newRow)
       }
     }
@@ -59,20 +64,21 @@ export class Field {
       fieldRemovedColum.unshift(blankRow)
     }
 
-    return fieldRemovedColum
+    this.field = fieldRemovedColum
   }
 
-  createCopy(columnVanish?: boolean): Field {
-    let field = this.getFieldDeepCopy()
+  copyInstance(columnVanish?: boolean): Field {
+    const copyField = this.field.map((row) => [...row])
+    const newField = new Field(copyField)
 
     if (columnVanish) {
-      field = this.columnVanish(field)
+      newField.removeColumn()
     }
 
-    return new Field(field)
+    newField.totalRemovedColumn = this.totalRemovedColumn
+    return newField
   }
 
-  // 新しいTetrominoが現在のfieldに描画可能か(衝突しないか)判定する
   isCollision(newTetromino: Tetromino): boolean {
     const points = newTetromino.tilesOnfield
     const copyField = this.getFieldDeepCopy()
@@ -90,14 +96,12 @@ export class Field {
 
   createFieldWithRenderTetromino(tetromino: Tetromino): Field {
     const points = tetromino.tilesOnfield
-    const copyField = this.getFieldDeepCopy()
+    const newField = this.copyInstance()
 
     points.forEach((point) => {
-      copyField[point[0]][point[1]] = tetromino.tetrominoType
+      newField.fieldData[point[0]][point[1]] = tetromino.tetrominoType
     })
 
-    const newField = this.columnVanish(copyField)
-
-    return new Field(newField)
+    return newField
   }
 }

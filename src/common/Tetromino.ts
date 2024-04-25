@@ -66,19 +66,6 @@ export class Tetromino {
     this.pointOnField = [0, 5]
   }
 
-  static getId(type: TETROMINO_TYPE): string {
-    switch (type) {
-      case TETROMINO_TYPE.I:
-        return 'block-i'
-      case TETROMINO_TYPE.O:
-        return 'block-o'
-      case TETROMINO_TYPE.S:
-        return 'block-s'
-      default:
-        return ''
-    }
-  }
-
   get tilesOnfield(): TilePoints {
     const tilesOnfield = []
 

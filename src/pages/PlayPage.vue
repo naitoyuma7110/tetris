@@ -1,19 +1,24 @@
 <script lang="ts" setup>
 import { Tetromino } from '@/common/Tetromino';
 import { Field } from '@/common/Field';
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import type { TETROMINO_TYPE } from '@/common/Tetromino';
 
 let tetromino = Tetromino.newRandomTetromino()
 let field = ref(new Field())
-const fieldWithFixed = ref(new Field())
+field.value = field.value.createFieldWithRenderTetromino(tetromino)
 
+const fieldWithFixed = ref(new Field())
 
 const handleShiftOnClick = (y: number, x: number) => {
   const newTetromino = tetromino.createCopy()
   newTetromino.shift(y, x)
   if (fieldWithFixed.value.isCollision(newTetromino)) {
     console.log("衝突!!")
+    if (y > 0) {
+      handleFixTetrominoOnClick()
+      return
+    }
     return
   }
   tetromino = newTetromino
@@ -39,10 +44,20 @@ const handleFixTetrominoOnClick = () => {
   field.value = field.value.createFieldWithRenderTetromino(tetromino)
 }
 
-// 1秒ごとに実行する関数
-const intervalId = setInterval(() => {
+const fallSpeed = ref<number>(500);
+
+let intervalId: number = setInterval(() => {
   handleShiftOnClick(1, 0);
-}, 1000);
+}, fallSpeed.value);
+
+watch(fallSpeed, (newFallSpeed) => {
+  clearInterval(intervalId)
+  intervalId = setInterval(() => {
+    handleShiftOnClick(1, 0);
+  }, newFallSpeed);
+
+  console.log(newFallSpeed)
+})
 
 const classBlockColor = (type: TETROMINO_TYPE): string => {
   if (type) {
@@ -96,6 +111,11 @@ const classBlockColor = (type: TETROMINO_TYPE): string => {
         <v-btn class="mx-2" icon="mdi-rotate-right" v-on:click="handleRotateOnClick"></v-btn>
         <v-btn class="mx-2" icon="mdi-check-circle-outline" v-on:click="handleFixTetrominoOnClick"></v-btn>
       </v-row>
+      <v-row class="mt-10">
+        <v-slider v-model="fallSpeed" :max="1000" :min="0" step="10" class="mx-5" hide-details>
+        </v-slider>
+        {{ `1 / ${fallSpeed} ms` }}
+      </v-row>
     </div>
   </div>
 </template>
@@ -107,7 +127,7 @@ const classBlockColor = (type: TETROMINO_TYPE): string => {
   justify-content: center;
 
   .game-board {
-    border: 1px solid #ccc;
+    border: 5px solid #ccc;
     border-top: none;
 
     &-row {
@@ -119,7 +139,7 @@ const classBlockColor = (type: TETROMINO_TYPE): string => {
       width: 30px;
       height: 30px;
       text-align: center;
-      border: 1px solid #EEE
+      border: 0.1px solid #EEE
     }
   }
 }

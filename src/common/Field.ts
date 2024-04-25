@@ -1,4 +1,6 @@
 import type { Tetromino } from '@/common/Tetromino'
+import { DROP_POINT } from '@/common/Tetromino'
+
 export type FieldData = number[][]
 
 const row = 20
@@ -8,27 +10,31 @@ export class Field {
   private field: FieldData
   private totalRemovedColumn: number = 0
 
-  constructor(field?: FieldData) {
-    if (field) {
-      this.field = field
-    } else {
-      const fieldData = new Array<Array<number>>(row)
+  constructor() {
+    const fieldData = new Array<Array<number>>(row)
 
-      for (let i = 0; i < row; i++) {
-        const fieldColumn = new Array(column).fill(0)
-        fieldData[i] = fieldColumn
-      }
-
-      this.field = fieldData
+    for (let i = 0; i < row; i++) {
+      const fieldColumn = new Array(column).fill(0)
+      fieldData[i] = fieldColumn
     }
+
+    this.field = fieldData
   }
   private getFieldDeepCopy(): FieldData {
     const deepCopyField = this.field.map((row) => [...row])
     return deepCopyField
   }
 
-  get fieldData() {
+  get fieldData(): FieldData {
     return this.field
+  }
+
+  get score(): number {
+    return this.totalRemovedColumn * 100
+  }
+
+  get isGameOver(): boolean {
+    return this.field[DROP_POINT[0]][DROP_POINT[1]] !== 0
   }
 
   private removeColumn() {
@@ -64,18 +70,19 @@ export class Field {
       fieldRemovedColum.unshift(blankRow)
     }
 
+    this.totalRemovedColumn += columnsToRemove.length
     this.field = fieldRemovedColum
   }
 
   copyInstance(columnVanish?: boolean): Field {
-    const copyField = this.field.map((row) => [...row])
-    const newField = new Field(copyField)
+    const newField = new Field()
+    newField.field = this.field.map((row) => [...row])
+    newField.totalRemovedColumn = this.totalRemovedColumn
 
     if (columnVanish) {
       newField.removeColumn()
     }
 
-    newField.totalRemovedColumn = this.totalRemovedColumn
     return newField
   }
 

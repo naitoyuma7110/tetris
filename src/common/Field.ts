@@ -31,14 +31,14 @@ export class Field {
     const columnsToRemove: number[] = []
 
     for (let row = 0; row < field.length; row++) {
-      let allTiles = true
+      let isAllTile = true
       for (let col = 0; col < field.length; col++) {
         if (field[row][col] === 0) {
-          allTiles = false
+          isAllTile = false
           break
         }
       }
-      if (allTiles) {
+      if (isAllTile) {
         columnsToRemove.push(row)
       }
     }
@@ -62,8 +62,13 @@ export class Field {
     return fieldRemovedColum
   }
 
-  createCopy(): Field {
-    const field = this.getFieldDeepCopy()
+  createCopy(columnVanish?: boolean): Field {
+    let field = this.getFieldDeepCopy()
+
+    if (columnVanish) {
+      field = this.columnVanish(field)
+    }
+
     return new Field(field)
   }
 

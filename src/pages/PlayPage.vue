@@ -3,6 +3,8 @@ import { Tetromino } from '@/common/Tetromino';
 import { Field } from '@/common/Field';
 import { ref, watch } from 'vue';
 import type { TETROMINO_TYPE } from '@/common/Tetromino';
+import { onMounted } from 'vue';
+import { onBeforeUnmount } from 'vue';
 
 let tetromino = Tetromino.newRandomTetromino()
 let field = ref(new Field())
@@ -10,14 +12,13 @@ field.value = field.value.createFieldWithRenderTetromino(tetromino)
 
 const fieldWithFixed = ref(new Field())
 
-const handleShiftOnClick = (y: number, x: number) => {
+const handleShiftTetromino = (y: number, x: number) => {
   const newTetromino = tetromino.createCopy()
   newTetromino.shift(y, x)
   if (fieldWithFixed.value.isCollision(newTetromino)) {
     console.log("衝突!!")
     if (y > 0) {
-      handleFixTetrominoOnClick()
-      return
+      handleFixTetromino()
     }
     return
   }
@@ -26,7 +27,7 @@ const handleShiftOnClick = (y: number, x: number) => {
   field.value = field.value.createFieldWithRenderTetromino(tetromino)
 }
 
-const handleRotateOnClick = () => {
+const handleRotateTetromino = () => {
   const newTetromino = tetromino.createCopy()
   newTetromino.rotate()
   if (fieldWithFixed.value.isCollision(newTetromino)) {
@@ -38,7 +39,7 @@ const handleRotateOnClick = () => {
   field.value = field.value.createFieldWithRenderTetromino(tetromino)
 }
 
-const handleFixTetrominoOnClick = () => {
+const handleFixTetromino = () => {
   tetromino = Tetromino.newRandomTetromino()
   fieldWithFixed.value = field.value.createCopy()
   field.value = field.value.createFieldWithRenderTetromino(tetromino)
@@ -47,13 +48,13 @@ const handleFixTetrominoOnClick = () => {
 const fallSpeed = ref<number>(500);
 
 let intervalId: number = setInterval(() => {
-  handleShiftOnClick(1, 0);
+  handleShiftTetromino(1, 0);
 }, fallSpeed.value);
 
 watch(fallSpeed, (newFallSpeed) => {
   clearInterval(intervalId)
   intervalId = setInterval(() => {
-    handleShiftOnClick(1, 0);
+    handleShiftTetromino(1, 0);
   }, newFallSpeed);
 
   console.log(newFallSpeed)
@@ -83,6 +84,45 @@ const classBlockColor = (type: TETROMINO_TYPE): string => {
   return "block-blank";
 }
 
+const handleKeyPress = (event: KeyboardEvent) => {
+  switch (event.key) {
+    case 'ArrowUp':
+      handleShiftTetromino(-1, 0)
+      console.log('↑キーが押されました');
+      break;
+    case 'ArrowDown':
+      handleShiftTetromino(1, 0)
+      console.log('↓キーが押されました');
+      break;
+    case 'ArrowLeft':
+      handleShiftTetromino(0, -1)
+      console.log('←キーが押されました');
+      break;
+    case 'ArrowRight':
+      handleShiftTetromino(0, 1)
+      console.log('→キーが押されました');
+      break;
+  }
+
+  if (event.key !== 'Space' && event.code === 'Space') {
+    handleRotateTetromino()
+    console.log('Spaceキーが押されました');
+  }
+  // Enter キーを取得する
+  if (event.key !== 'Enter' && event.code === 'Enter') {
+    handleFixTetromino()
+    console.log('Enterキーが押されました');
+  }
+}
+
+onMounted(() => {
+  document.addEventListener('keydown', handleKeyPress);
+});
+
+onBeforeUnmount(() => {
+  document.removeEventListener('keydown', handleKeyPress);
+});
+
 </script>
 
 <template>
@@ -100,16 +140,16 @@ const classBlockColor = (type: TETROMINO_TYPE): string => {
     </div>
     <div class="w-25">
       <v-row class="align-center justify-center">
-        <v-btn icon="mdi-arrow-left-bold-outline" v-on:click="handleShiftOnClick(0, -1)"></v-btn>
+        <v-btn icon="mdi-arrow-left-bold-outline" v-on:click="handleShiftTetromino(0, -1)"></v-btn>
         <div class="d-flex flex-column">
-          <v-btn class="mb-2" icon="mdi-arrow-up-bold-outline" v-on:click="handleShiftOnClick(-1, 0)"></v-btn>
-          <v-btn class="mt-2" icon="mdi-arrow-down-bold-outline" v-on:click="handleShiftOnClick(1, 0)"></v-btn>
+          <v-btn class="mb-2" icon="mdi-arrow-up-bold-outline" v-on:click="handleShiftTetromino(-1, 0)"></v-btn>
+          <v-btn class="mt-2" icon="mdi-arrow-down-bold-outline" v-on:click="handleShiftTetromino(1, 0)"></v-btn>
         </div>
-        <v-btn icon="mdi-arrow-right-bold-outline" v-on:click="handleShiftOnClick(0, 1)"></v-btn>
+        <v-btn icon="mdi-arrow-right-bold-outline" v-on:click="handleShiftTetromino(0, 1)"></v-btn>
       </v-row>
       <v-row class="align-center justify-center mt-5">
-        <v-btn class="mx-2" icon="mdi-rotate-right" v-on:click="handleRotateOnClick"></v-btn>
-        <v-btn class="mx-2" icon="mdi-check-circle-outline" v-on:click="handleFixTetrominoOnClick"></v-btn>
+        <v-btn class="mx-2" icon="mdi-rotate-right" v-on:click="handleRotateTetromino"></v-btn>
+        <v-btn class="mx-2" icon="mdi-check-circle-outline" v-on:click="handleFixTetromino"></v-btn>
       </v-row>
       <v-row class="mt-10">
         <v-slider v-model="fallSpeed" :max="1000" :min="0" step="10" class="mx-5" hide-details>

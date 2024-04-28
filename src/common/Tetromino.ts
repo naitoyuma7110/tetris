@@ -1,7 +1,7 @@
 export type Point = [number, number]
 export type TilePoints = Point[]
 
-const tetrominos: TilePoints[] = [
+export const tetrominos: TilePoints[] = [
   // 原点を(0,0)とした各種テトリミノのタイル配置を定義[y,x]
   // 1から始まるIDと紐づけたいので配列1番目にダミーを設置(使用しない)
   [[0, 0]],
@@ -109,7 +109,7 @@ export class Tetromino {
     return newTetromino
   }
 
-  static newRandomTetromino(): Tetromino {
+  static createRandomTetromino(): Tetromino {
     const tetrominoTypes = tetrominos.length - 1
     const type = Math.floor(Math.random() * tetrominoTypes) + 1
 

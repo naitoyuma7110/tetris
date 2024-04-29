@@ -3,11 +3,20 @@ import { Field } from '@/common/Field';
 import { ref, watch, onMounted } from 'vue';
 import type { TETROMINO_TYPE } from '@/common/Tetromino';
 import { TetrominoManager } from '@/common/TetrominoManager';
+import { getBlockClass } from '@/common/utils'
+import TetrominoBox from '@/components/TetrominoBox.vue';
 
 const field = ref(new Field())
 const fieldWithFixed = ref(new Field())
 const tetrominoManager = new TetrominoManager
 
+/**
+ * x,yに応じてテトリミノ位置を移動させる
+ * 移動後のテトリミノが堆積タイルや壁に衝突する場合移動しない
+ * また下方向に移動で衝突した場合、落下の判定としてフィールド上に固定され次テトリミノを出現させる
+ * @param y 縦方向の座標移動
+ * @param x 横方向の座標移動
+ */
 const handleShiftTetromino = (y: number, x: number) => {
   const newTetromino = tetrominoManager.createActiveCopy()
   newTetromino.shift(y, x)
@@ -18,11 +27,16 @@ const handleShiftTetromino = (y: number, x: number) => {
     }
     return
   }
+
   tetrominoManager.activeTetromino = newTetromino
   field.value = fieldWithFixed.value.copyInstance()
   field.value = field.value.createFieldWithRenderTetromino(tetrominoManager.activeTetromino)
 }
 
+/**
+ * テトリミノを回転させる
+ * ロジックは移動とほぼ一緒だが落下判定がない
+ */
 const handleRotateTetromino = () => {
   const newTetromino = tetrominoManager.createActiveCopy()
   newTetromino.rotate()
@@ -35,10 +49,14 @@ const handleRotateTetromino = () => {
   field.value = field.value.createFieldWithRenderTetromino(newTetromino)
 }
 
+/**
+ * テトリミノをフィールドに固定し新しいテトリミノを落下口に出現させる
+ * 堆積したタイルを持つフィールドに落下中のテトリミノの位置を追加する事で固定したテトリミノ群を保持している
+ */
 const handleFixTetromino = () => {
   tetrominoManager.createActiveTetromino()
   fieldWithFixed.value = field.value.copyInstance(true)
-  field.value = fieldWithFixed.value.copyInstance(true)
+  field.value = fieldWithFixed.value.copyInstance()
   field.value = field.value.createFieldWithRenderTetromino(tetrominoManager.activeTetromino)
   if (fieldWithFixed.value.isGameOver) {
     clearInterval(intervalId)
@@ -46,6 +64,7 @@ const handleFixTetromino = () => {
   }
 }
 
+// 落下スピード制御
 const fallSpeed = ref<number>(500);
 
 let intervalId: number = setInterval(() => {
@@ -61,30 +80,8 @@ watch(fallSpeed, (newFallSpeed) => {
   console.log(newFallSpeed)
 })
 
-const getBlockClass = (type: TETROMINO_TYPE): string => {
-  if (type) {
-    switch (type) {
-      case 1:
-        return "block-i";
-      case 2:
-        return "block-o";
-      case 3:
-        return "block-s";
-      case 4:
-        return "block-z";
-      case 5:
-        return "block-j";
-      case 6:
-        return "block-l";
-      case 7:
-        return "block-t";
-      default:
-        return "block-blank";
-    }
-  }
-  return "block-blank";
-}
 
+// キーボードイベント登録
 const handleKeyPress = (event: KeyboardEvent) => {
   switch (event.key) {
     case 'ArrowUp':
@@ -113,7 +110,6 @@ onMounted(() => {
   document.addEventListener('keydown', handleKeyPress);
   field.value = field.value.createFieldWithRenderTetromino(tetrominoManager.activeTetromino)
 });
-
 </script>
 
 <template>
@@ -132,9 +128,11 @@ onMounted(() => {
     <div class="w-25 ms-5 d-flex flex-column">
       <div>
         <p class="">SCORE: {{ fieldWithFixed.score }}</p>
+        Next
         <span v-for="(tetromino, i) in tetrominoManager.nextTetrominos" :key="i">
-          <p>{{ tetromino.tetrominoType }}</p>
+          <TetrominoBox :tetromino=tetromino />
         </span>
+        <p>Stocked {{ tetrominoManager.stockedTetromino }}</p>
       </div>
       <div class="mt-auto py-5">
         <div class="mt-10 mb-5">
@@ -160,7 +158,7 @@ onMounted(() => {
   </div>
 </template>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .container {
   margin-top: 20px;
   display: flex;

@@ -20,23 +20,44 @@ export class Field {
 
     this.field = fieldData
   }
+  /**
+   * クラスが持つFieldのコピーを生成し返す
+   * @returns {FieldData} Fieldのコピー(値渡し)
+   */
   private getFieldDeepCopy(): FieldData {
     const deepCopyField = this.field.map((row) => [...row])
     return deepCopyField
   }
 
+  /**
+   * クラスが持つField参照用のGetter
+   * @returns {FieldData} 変更不可のField
+   */
   get fieldData(): FieldData {
     return this.field
   }
 
+  /**
+   * クラスが持つtotalRemovedColumnを使用し累積消去列数から現在のスコアを返す
+   * スコアの計算は暫定的に×100しているだけ
+   * @returns {number} 消去列数に応じた点数
+   */
   get score(): number {
     return this.totalRemovedColumn * 100
   }
 
+  /**
+   * テトリミノ落下口までタイルが堆積した場合、ゲームオーバーの判定を行う
+   * @returns {boolean} ゲームオーバーか否か
+   */
   get isGameOver(): boolean {
     return this.field[DROP_POINT[0]][DROP_POINT[1]] !== 0
   }
 
+  /**
+   * クラスのfiledを参照しタイルで埋まっている列を消滅する
+   * 消滅した列より上部の全ての列を下方にシフトしfiledを更新する
+   */
   private removeColumn() {
     // 列に0以外のcolを含むか判定し削除対象の列インデックスを保持
     const columnsToRemove: number[] = []
@@ -74,9 +95,14 @@ export class Field {
     this.field = fieldRemovedColum
   }
 
+  /**
+   *
+   * @param columnVanish インスタンスコピー時に列消滅を実行するか指定するbool値
+   * @returns {Field} クラスのコピーを返す
+   */
   copyInstance(columnVanish?: boolean): Field {
     const newField = new Field()
-    newField.field = this.field.map((row) => [...row])
+    newField.field = this.getFieldDeepCopy()
     newField.totalRemovedColumn = this.totalRemovedColumn
 
     if (columnVanish) {
@@ -86,6 +112,12 @@ export class Field {
     return newField
   }
 
+  /**
+   * テトリミノインスタンスを受け取り、それがクラスのFieldに描画できるか判定
+   * フィールドに堆積したタイル情報を保持するフィールドクラスで実行する事を想定している
+   * @param  newTetromino  描画したいテトリミノクラス
+   * @returns {boolean} 描画可能か否か
+   */
   isCollision(newTetromino: Tetromino): boolean {
     const points = newTetromino.tilesOnfield
     const copyField = this.getFieldDeepCopy()
@@ -108,7 +140,6 @@ export class Field {
     points.forEach((point) => {
       newField.fieldData[point[0]][point[1]] = tetromino.tetrominoType
     })
-
     return newField
   }
 }

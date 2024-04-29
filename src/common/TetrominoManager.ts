@@ -1,4 +1,3 @@
-import { reactive } from 'vue'
 import { Tetromino } from './Tetromino'
 
 export class TetrominoManager {

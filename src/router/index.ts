@@ -1,10 +1,10 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
-// トップページとゲームページを読み込む
 import TopPage from '@/pages/TopPage.vue'
 import PlayPage from '@/pages/PlayPage.vue'
 import PiniaTest from '@/pages/PiniaTest.vue'
 import TestPage from '@/pages/TestPage.vue'
+import TestPage2 from '@/pages/TestPage2.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -18,6 +18,11 @@ const router = createRouter({
       path: '/test',
       name: 'TestPage',
       component: TestPage
+    },
+    {
+      path: '/test2',
+      name: 'TestPage2',
+      component: TestPage2
     },
     {
       path: '/play',

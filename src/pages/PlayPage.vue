@@ -8,7 +8,7 @@ import TetrominoBox from '@/components/TetrominoBox.vue';
 
 const field = ref(new Field())
 const fieldWithFixed = ref(new Field())
-const tetrominoManager = new TetrominoManager
+const tetrominoManager = ref(new TetrominoManager)
 
 /**
  * x,yに応じてテトリミノ位置を移動させる
@@ -18,7 +18,7 @@ const tetrominoManager = new TetrominoManager
  * @param x 横方向の座標移動
  */
 const handleShiftTetromino = (y: number, x: number) => {
-  const newTetromino = tetrominoManager.createActiveCopy()
+  const newTetromino = tetrominoManager.value.createActiveCopy()
   newTetromino.shift(y, x)
   if (fieldWithFixed.value.isCollision(newTetromino)) {
     console.log("衝突!!")
@@ -28,9 +28,9 @@ const handleShiftTetromino = (y: number, x: number) => {
     return
   }
 
-  tetrominoManager.activeTetromino = newTetromino
+  tetrominoManager.value.activeTetromino = newTetromino
   field.value = fieldWithFixed.value.copyInstance()
-  field.value = field.value.createFieldWithRenderTetromino(tetrominoManager.activeTetromino)
+  field.value = field.value.createFieldWithRenderTetromino(newTetromino)
 }
 
 /**
@@ -38,13 +38,13 @@ const handleShiftTetromino = (y: number, x: number) => {
  * ロジックは移動とほぼ一緒だが落下判定がない
  */
 const handleRotateTetromino = () => {
-  const newTetromino = tetrominoManager.createActiveCopy()
+  const newTetromino = tetrominoManager.value.createActiveCopy()
   newTetromino.rotate()
   if (fieldWithFixed.value.isCollision(newTetromino)) {
     console.log("衝突!!")
     return
   }
-  tetrominoManager.activeTetromino = newTetromino
+  tetrominoManager.value.activeTetromino = newTetromino
   field.value = fieldWithFixed.value.copyInstance()
   field.value = field.value.createFieldWithRenderTetromino(newTetromino)
 }
@@ -54,10 +54,10 @@ const handleRotateTetromino = () => {
  * 堆積したタイルを持つフィールドに落下中のテトリミノの位置を追加する事で固定したテトリミノ群を保持している
  */
 const handleFixTetromino = () => {
-  tetrominoManager.createActiveTetromino()
+  const newActiveTetromino = tetrominoManager.value.createActiveTetromino()
   fieldWithFixed.value = field.value.copyInstance(true)
   field.value = fieldWithFixed.value.copyInstance()
-  field.value = field.value.createFieldWithRenderTetromino(tetrominoManager.activeTetromino)
+  field.value = field.value.createFieldWithRenderTetromino(newActiveTetromino)
   if (fieldWithFixed.value.isGameOver) {
     clearInterval(intervalId)
     alert("Game Over")
@@ -108,7 +108,7 @@ const handleKeyPress = (event: KeyboardEvent) => {
 
 onMounted(() => {
   document.addEventListener('keydown', handleKeyPress);
-  field.value = field.value.createFieldWithRenderTetromino(tetrominoManager.activeTetromino)
+  field.value = field.value.createFieldWithRenderTetromino(tetrominoManager.value.createActiveCopy())
 });
 </script>
 
@@ -128,7 +128,10 @@ onMounted(() => {
     <div class="w-25 ms-5 d-flex flex-column">
       <div>
         <p class="">SCORE: {{ fieldWithFixed.score }}</p>
-        Next
+        <p>{{ tetrominoManager.nextTetrominos[0].tetrominoType }}</p>
+        <p>
+          Next
+        </p>
         <span v-for="(tetromino, i) in tetrominoManager.nextTetrominos" :key="i">
           <TetrominoBox :tetromino=tetromino />
         </span>

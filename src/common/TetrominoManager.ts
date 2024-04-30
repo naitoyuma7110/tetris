@@ -25,5 +25,7 @@ export class TetrominoManager {
     this.activeTetromino = this.nextTetrominos[0]
     this.nextTetrominos.shift()
     this.nextTetrominos.push(Tetromino.createRandomTetromino())
+
+    return this.activeTetromino.copyInstance()
   }
 }

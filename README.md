@@ -29,7 +29,7 @@
 
 > リアクティブな値の分割代入
 >
-> Vue3でtoRefs()関数を使う：https://qiita.com/oinusama/items/9fc1755e8141fecd5650
+> Vue3でtoRefs()関数を使う：https://qiita.com/oinusama/items/9fc1755e8141fecd5650  
 > メモ：Vueにおいてリアクティブな値を分割代入するとリアクティブ性を失うためtoRefsを使用して分割する
 
 ## 構成

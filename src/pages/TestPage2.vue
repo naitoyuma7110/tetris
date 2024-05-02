@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import TestChild from "@/components/TestChild.vue";
 import { testA, testB, testC, testD, testE } from "@/common/test"
 import { reactive, ref } from 'vue';
 
@@ -35,6 +36,9 @@ const updateText = () => {
       <p>{{ refA.field.text }}</p>
     </div>
   </div>
+  <TestChild class="testChild" :testClass="defaultA" :className="'defaultA'"></TestChild>
+  <TestChild class="testChild" :testClass="reactiveA" :className="'reactiveA'"></TestChild>
+  <TestChild class="testChild" :testClass="refA" :className="'refA'"></TestChild>
 </template>
 
 <style sass scoped>
@@ -47,5 +51,9 @@ const updateText = () => {
     border: 1px solid #CCC;
     margin-right: 10px;
   }
+}
+
+.testChild {
+  margin-bottom: 40px;
 }
 </style>

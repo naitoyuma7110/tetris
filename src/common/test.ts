@@ -5,8 +5,12 @@ export class testA {
   field = {
     text: ''
   }
-  constructor() {
-    this.field.text = 'hello'
+  constructor(text?: string) {
+    if (!text) {
+      this.field.text = 'hello'
+    } else {
+      this.field.text = text
+    }
   }
 }
 
@@ -46,5 +50,14 @@ export class testE {
   }
   constructor() {
     this.field.text.value = 'hello'
+  }
+}
+
+// フィールドに他クラスを持つクラスを定義
+export class HasClassOnField {
+  classes: testA[] = []
+
+  getClassLength() {
+    return this.classes.length
   }
 }

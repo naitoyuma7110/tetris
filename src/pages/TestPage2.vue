@@ -1,19 +1,27 @@
 <script lang="ts" setup>
 import TestChild from "@/components/TestChild.vue";
-import { testA, testB, testC, testD, testE } from "@/common/test"
+import { testA, testB, testC, testD, testE, HasClassOnField } from "@/common/test"
 import { reactive, ref } from 'vue';
 
-const defaultA = new testA
+const defaultA = new testA()
 
-const reactiveA = reactive(new testA)
+const reactiveA = reactive(new testA())
 
-const refA = ref(new testA)
+const refA = ref(new testA())
+
+const hasClassOnField = reactive(new HasClassOnField())
+hasClassOnField.classes.push(new testA("最初のクラスA"))
+hasClassOnField.classes.push(new testA("2番目のクラスA"))
+hasClassOnField.classes.push(new testA("3番目のクラスA"))
+
 
 const updateText = () => {
   defaultA.field.text = "アップデート"
   reactiveA.field.text = "アップデート"
   refA.value.field.text = "アップデート"
 }
+
+
 
 </script>
 
@@ -35,10 +43,17 @@ const updateText = () => {
       <input v-model="refA.field.text">
       <p>{{ refA.field.text }}</p>
     </div>
+
+
+    <div v-for="(testA, i) in hasClassOnField.classes" :key="i">
+      <input v-model="testA.field.text">
+      <p>{{ testA.field.text }}</p>
+    </div>
+    <TestChild :testClass="defaultA" :className="'defaultA'" :hasClassOnField="hasClassOnField">
+    </TestChild>
+    <!-- <TestChild class="testChild" :testClass="reactiveA" :className="'reactiveA'"></TestChild> -->
+    <!-- <TestChild class="testChild" :testClass="refA" :className="'refA'"></TestChild> -->
   </div>
-  <TestChild class="testChild" :testClass="defaultA" :className="'defaultA'"></TestChild>
-  <TestChild class="testChild" :testClass="reactiveA" :className="'reactiveA'"></TestChild>
-  <TestChild class="testChild" :testClass="refA" :className="'refA'"></TestChild>
 </template>
 
 <style sass scoped>

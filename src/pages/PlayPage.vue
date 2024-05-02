@@ -4,7 +4,7 @@ import { ref, watch, onMounted } from 'vue';
 import type { TETROMINO_TYPE } from '@/common/Tetromino';
 import { TetrominoManager } from '@/common/TetrominoManager';
 import { getBlockClass } from '@/common/utils'
-import TetrominoBox from '@/components/TetrominoBox.vue';
+import TetrominoBox from '@/components/playPage/TetrominoBox.vue';
 
 const field = ref(new Field())
 const fieldWithFixed = ref(new Field())

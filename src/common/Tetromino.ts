@@ -13,9 +13,9 @@ export const tetrominos: TilePoints[] = [
   ],
   [
     [0, 0],
-    [0, 1],
+    [0, -1],
     [1, 0],
-    [1, 1]
+    [1, -1]
   ],
   [
     [0, 0],
@@ -65,7 +65,7 @@ export class Tetromino {
   constructor(type: TETROMINO_TYPE) {
     this.type = type
     this.tilePoints = tetrominos[this.type]
-    this.pointOnField = [0, 5]
+    this.pointOnField = DROP_POINT
   }
 
   get tilesOnfield(): TilePoints {
@@ -80,6 +80,10 @@ export class Tetromino {
 
   get tetrominoType(): TETROMINO_TYPE {
     return this.type
+  }
+
+  set setPointOnField(point: Point) {
+    this.pointOnField = point
   }
 
   // タイル配置を90度右回転後のものに更新する

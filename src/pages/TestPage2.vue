@@ -9,16 +9,24 @@ const reactiveA = reactive(new testA())
 
 const refA = ref(new testA())
 
-const hasClassOnField = reactive(new HasClassOnField())
-hasClassOnField.classes.push(new testA("最初のクラスA"))
-hasClassOnField.classes.push(new testA("2番目のクラスA"))
-hasClassOnField.classes.push(new testA("3番目のクラスA"))
+// const hasClassOnField = reactive(new HasClassOnField())
+// hasClassOnField.classes.push(new testA("最初のクラスA"))
+// hasClassOnField.classes.push(new testA("2番目のクラスA"))
+// hasClassOnField.classes.push(new testA("3番目のクラスA"))
+
+const hasClassOnField2 = ref(new HasClassOnField())
+hasClassOnField2.value.classes.push(new testA("最初のクラスA"))
+hasClassOnField2.value.classes.push(new testA("2番目のクラスA"))
+hasClassOnField2.value.classes.push(new testA("3番目のクラスA"))
 
 
 const updateText = () => {
   defaultA.field.text = "アップデート"
   reactiveA.field.text = "アップデート"
   refA.value.field.text = "アップデート"
+  hasClassOnField2.value.classes[0] = new testA("new testA")
+  hasClassOnField2.value.classes[1].field.text = "アップデート"
+  hasClassOnField2.value.classes[2].field.text = "アップデート"
 }
 
 
@@ -45,11 +53,11 @@ const updateText = () => {
     </div>
 
 
-    <div v-for="(testA, i) in hasClassOnField.classes" :key="i">
+    <div v-for="(testA, i) in hasClassOnField2.classes" :key="i">
       <input v-model="testA.field.text">
       <p>{{ testA.field.text }}</p>
     </div>
-    <TestChild :testClass="defaultA" :className="'defaultA'" :hasClassOnField="hasClassOnField">
+    <TestChild :testClass="defaultA" :className="'defaultA'" :hasClassOnField="hasClassOnField2">
     </TestChild>
     <!-- <TestChild class="testChild" :testClass="reactiveA" :className="'reactiveA'"></TestChild> -->
     <!-- <TestChild class="testChild" :testClass="refA" :className="'refA'"></TestChild> -->

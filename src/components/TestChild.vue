@@ -1,5 +1,16 @@
 <script setup lang="ts">
-const { testClass, className, hasClassOnField } = defineProps(['testClass', 'className', 'hasClassOnField'])
+import { toRefs } from 'vue';
+
+
+/*
+  分割代入はリアクティブ性を失うため注意
+  そんため下記はNGパターン
+  const { testClass, className, hasClassOnField } = defineProps(['testClass', 'className', 'hasClassOnField'])
+  */
+
+// toRefsを使用してpropsの
+const props = defineProps(['testClass', 'className', 'hasClassOnField']);
+const { testClass, className, hasClassOnField } = toRefs(props);
 
 </script>
 
@@ -14,5 +25,3 @@ const { testClass, className, hasClassOnField } = defineProps(['testClass', 'cla
     </div>
   </div>
 </template>
-
-<style></style>

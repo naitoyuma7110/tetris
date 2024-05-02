@@ -1,4 +1,4 @@
-import { Tetromino } from './Tetromino'
+import { DROP_POINT, Tetromino } from './Tetromino'
 
 export class TetrominoManager {
   stockedTetromino: Tetromino | undefined
@@ -11,21 +11,31 @@ export class TetrominoManager {
     const setCount = 2
     const nextTetrominos: Tetromino[] = []
     for (let i = 1; i <= setCount; i++) {
-      nextTetrominos.push(Tetromino.createRandomTetromino())
+      const nextTetromino = Tetromino.createRandomTetromino()
+      nextTetromino.setPointOnField = [0, 1]
+      nextTetrominos.push(nextTetromino)
     }
     this.nextTetrominos = nextTetrominos
     this.activeTetromino = Tetromino.createRandomTetromino()
   }
 
-  createActiveCopy() {
+  getActiveCopy() {
     return this.activeTetromino.copyInstance()
   }
 
   createActiveTetromino() {
-    this.activeTetromino = this.nextTetrominos[0]
+    const activeTetromino = this.nextTetrominos[0].copyInstance()
+    activeTetromino.setPointOnField = DROP_POINT
+    this.activeTetromino = activeTetromino
     this.nextTetrominos.shift()
-    this.nextTetrominos.push(Tetromino.createRandomTetromino())
+    const nextTetromino = Tetromino.createRandomTetromino()
+    nextTetromino.setPointOnField = [0, 1]
+    this.nextTetrominos.push(nextTetromino)
+  }
 
-    return this.activeTetromino.copyInstance()
+  stockTetromino() {
+    const newStockTetromino = this.getActiveCopy()
+    newStockTetromino.setPointOnField = [0, 1]
+    this.stockedTetromino = newStockTetromino
   }
 }

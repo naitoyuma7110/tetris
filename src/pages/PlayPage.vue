@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { Field } from '@/common/Field';
-import { ref, watch, onMounted } from 'vue';
+import { ref, watch, onMounted, reactive } from 'vue';
 import type { TETROMINO_TYPE } from '@/common/Tetromino';
 import { TetrominoManager } from '@/common/TetrominoManager';
 import { getBlockClass } from '@/common/utils'
@@ -8,7 +8,7 @@ import TetrominoBox from '@/components/playPage/TetrominoBox.vue';
 
 const field = ref(new Field())
 const fieldWithFixed = ref(new Field())
-const tetrominoManager = ref(new TetrominoManager)
+const tetrominoManager = reactive(new TetrominoManager)
 
 /**
  * x,yに応じてテトリミノ位置を移動させる
@@ -18,7 +18,7 @@ const tetrominoManager = ref(new TetrominoManager)
  * @param x 横方向の座標移動
  */
 const handleShiftTetromino = (y: number, x: number) => {
-  const newTetromino = tetrominoManager.value.createActiveCopy()
+  const newTetromino = tetrominoManager.getActiveCopy()
   newTetromino.shift(y, x)
   if (fieldWithFixed.value.isCollision(newTetromino)) {
     console.log("衝突!!")
@@ -28,7 +28,7 @@ const handleShiftTetromino = (y: number, x: number) => {
     return
   }
 
-  tetrominoManager.value.activeTetromino = newTetromino
+  tetrominoManager.activeTetromino = newTetromino
   field.value = fieldWithFixed.value.copyInstance()
   field.value = field.value.createFieldWithRenderTetromino(newTetromino)
 }
@@ -38,13 +38,13 @@ const handleShiftTetromino = (y: number, x: number) => {
  * ロジックは移動とほぼ一緒だが落下判定がない
  */
 const handleRotateTetromino = () => {
-  const newTetromino = tetrominoManager.value.createActiveCopy()
+  const newTetromino = tetrominoManager.getActiveCopy()
   newTetromino.rotate()
   if (fieldWithFixed.value.isCollision(newTetromino)) {
     console.log("衝突!!")
     return
   }
-  tetrominoManager.value.activeTetromino = newTetromino
+  tetrominoManager.activeTetromino = newTetromino
   field.value = fieldWithFixed.value.copyInstance()
   field.value = field.value.createFieldWithRenderTetromino(newTetromino)
 }
@@ -54,7 +54,8 @@ const handleRotateTetromino = () => {
  * 堆積したタイルを持つフィールドに落下中のテトリミノの位置を追加する事で固定したテトリミノ群を保持している
  */
 const handleFixTetromino = () => {
-  const newActiveTetromino = tetrominoManager.value.createActiveTetromino()
+  tetrominoManager.createActiveTetromino()
+  const newActiveTetromino = tetrominoManager.getActiveCopy()
   fieldWithFixed.value = field.value.copyInstance(true)
   field.value = fieldWithFixed.value.copyInstance()
   field.value = field.value.createFieldWithRenderTetromino(newActiveTetromino)
@@ -62,6 +63,14 @@ const handleFixTetromino = () => {
     clearInterval(intervalId)
     alert("Game Over")
   }
+}
+
+const handleStockTetromino = () => {
+  tetrominoManager.stockTetromino()
+  tetrominoManager.createActiveTetromino()
+  const newActiveTetromino = tetrominoManager.getActiveCopy()
+  field.value = field.value.createFieldWithRenderTetromino(newActiveTetromino)
+
 }
 
 // 落下スピード制御
@@ -108,7 +117,7 @@ const handleKeyPress = (event: KeyboardEvent) => {
 
 onMounted(() => {
   document.addEventListener('keydown', handleKeyPress);
-  field.value = field.value.createFieldWithRenderTetromino(tetrominoManager.value.createActiveCopy())
+  field.value = field.value.createFieldWithRenderTetromino(tetrominoManager.getActiveCopy())
 });
 </script>
 
@@ -121,23 +130,24 @@ onMounted(() => {
       <div class="game-board-row" v-for="(row, y) in field.fieldData" :key="y">
         <span class="game-board-col" v-bind:class="getBlockClass(col as (TETROMINO_TYPE))" v-for=" (col, x) in row"
           :key="() => `${x}${y}`">
-          {{ col }}
         </span>
       </div>
     </div>
     <div class="w-25 ms-5 d-flex flex-column">
       <div>
-        <p class="">SCORE: {{ fieldWithFixed.score }}</p>
-        <p>{{ tetrominoManager.nextTetrominos[0].tetrominoType }}</p>
-        <p>
-          Next
-        </p>
-        <span v-for="(tetromino, i) in tetrominoManager.nextTetrominos" :key="i">
-          <TetrominoBox :tetromino=tetromino />
-        </span>
-        <p>Stocked {{ tetrominoManager.stockedTetromino }}</p>
+        <p class="text-subtitle-1 mb-4">SCORE: {{ fieldWithFixed.score }}</p>
+        <div class="d-flex mb-4">
+          <div v-for="(tetromino, i) in tetrominoManager.nextTetrominos" :key="i">
+            <p class="text-subtitle-1">
+              {{ i === 0 ? "Next" : "2nd" }}
+            </p>
+            <TetrominoBox :tetromino="tetromino" />
+          </div>
+        </div>
+        <p class="text-subtitle-1">Stocked</p>
+        <TetrominoBox :tetromino="tetrominoManager.stockedTetromino" />
       </div>
-      <div class="mt-auto py-5">
+      <div class=" mt-auto py-5">
         <div class="mt-10 mb-5">
           <p class="text-end">
             {{ `1 / ${fallSpeed} ms` }}
@@ -155,6 +165,7 @@ onMounted(() => {
         <v-row class="align-center justify-center mt-5">
           <v-btn class="mx-2" icon="mdi-rotate-right" v-on:click="handleRotateTetromino"></v-btn>
           <v-btn class="mx-2" icon="mdi-check-circle-outline" v-on:click="handleFixTetromino"></v-btn>
+          <v-btn class="mx-2" icon="mdi-food-takeout-box-outline" v-on:click="handleStockTetromino"></v-btn>
         </v-row>
       </div>
     </div>
@@ -166,23 +177,27 @@ onMounted(() => {
   margin-top: 20px;
   display: flex;
   justify-content: center;
+}
 
-  .game-board {
-    border: 5px solid #ccc;
-    border-top: none;
+.game-board {
+  border: 5px solid #ccc;
+  border-top: none;
 
-    &-row {
-      display: flex;
-      width: 100%;
-    }
-
-    &-col {
-      width: 30px;
-      height: 30px;
-      text-align: center;
-      border: 0.1px solid #EEE
-    }
+  &-row {
+    display: flex;
+    width: 100%;
   }
+
+  &-col {
+    width: 30px;
+    height: 30px;
+    text-align: center;
+    border: 0.1px solid #EEE;
+  }
+}
+
+.next-box {
+  display: flex;
 }
 
 .block {

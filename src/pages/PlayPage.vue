@@ -67,7 +67,6 @@ const handleFixTetromino = () => {
 
 const handleStockTetromino = () => {
   tetrominoManager.stockTetromino()
-  // tetrominoManager.createActiveTetromino()
   const newActiveTetromino = tetrominoManager.getActiveCopy()
   field.value = fieldWithFixed.value.copyInstance()
   field.value = field.value.createFieldWithRenderTetromino(newActiveTetromino)

@@ -13,9 +13,9 @@ const tetrominoManager = reactive(new TetrominoManager)
 /**
  * x,yに応じてテトリミノ位置を移動させる
  * 移動後のテトリミノが堆積タイルや壁に衝突する場合移動しない
- * また下方向に移動で衝突した場合、落下の判定としてフィールド上に固定され次テトリミノを出現させる
- * @param y 縦方向の座標移動
- * @param x 横方向の座標移動
+ * また下方向への移動で衝突した場合、落下としてフィールド上に固定され次テトリミノを出現させる
+ * @param y 縦方向の座標移動距離
+ * @param x 横方向の座標移動距離
  */
 const handleShiftTetromino = (y: number, x: number) => {
   const newTetromino = tetrominoManager.getActiveCopy()
@@ -69,6 +69,7 @@ const handleStockTetromino = () => {
   tetrominoManager.stockTetromino()
   tetrominoManager.createActiveTetromino()
   const newActiveTetromino = tetrominoManager.getActiveCopy()
+  field.value = fieldWithFixed.value.copyInstance()
   field.value = field.value.createFieldWithRenderTetromino(newActiveTetromino)
 
 }
@@ -137,7 +138,7 @@ onMounted(() => {
       <div>
         <p class="text-subtitle-1 mb-4">SCORE: {{ fieldWithFixed.score }}</p>
         <div class="d-flex mb-4">
-          <div v-for="(tetromino, i) in tetrominoManager.nextTetrominos" :key="i">
+          <div class="me-4" v-for="(tetromino, i) in tetrominoManager.nextTetrominos" :key="i">
             <p class="text-subtitle-1">
               {{ i === 0 ? "Next" : "2nd" }}
             </p>

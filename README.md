@@ -1,6 +1,6 @@
 # Vue3 Composition APIでテトリス
 
-## メモ
+## 開発メモ
 
 > Vuetify3(デザインフレームワーク)
 >
@@ -17,11 +17,16 @@
 >
 > - セットアップ：https://v3.router.vuejs.org/ja/installation.html
 
-> オブジェクト指向
+> クラスインスタンスのリアクティブ化
 >
 > - Vue3でTS使ってもクラスなんか使うなよ、という話：https://zenn.dev/tanukikyo/articles/40603fbdc88c05
 >
 > メモ：クラスインスタンスのリアクティブ化は注意点が多くコードの複雑化を招く旨を解説する記事だが現バージョンで検証したところref,reactiveによる定義で内部までリアクティブ化が可能で、呼び出しも記事に記載されたような特殊な点は見られない
+
+> reactiveで定義したオブジェクトに対して再代入するとリアクティビティが失われる
+>
+> [Vue3] オブジェクトをリアクティブにするのに ref()、reactive() どちらにするかハマった話：https://qiita.com/sygnas/items/672709d6dad6bcfea43f  
+> メモ：let(再代入前提) + reactiveで宣言して新しくnew classする際、Object.assign(target, source)を使う方法もあるらしいがコード記述が長くなるためrefを使用。
 
 > Vue3 computed/watch/watchEffect 使い分け調べてみた：https://zenn.dev/n4sh/articles/d51f505835d171
 >

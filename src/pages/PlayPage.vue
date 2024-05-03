@@ -67,7 +67,7 @@ const handleFixTetromino = () => {
 
 const handleStockTetromino = () => {
   tetrominoManager.stockTetromino()
-  tetrominoManager.createActiveTetromino()
+  // tetrominoManager.createActiveTetromino()
   const newActiveTetromino = tetrominoManager.getActiveCopy()
   field.value = fieldWithFixed.value.copyInstance()
   field.value = field.value.createFieldWithRenderTetromino(newActiveTetromino)
@@ -106,6 +106,15 @@ const handleKeyPress = (event: KeyboardEvent) => {
     case 'ArrowRight':
       handleShiftTetromino(0, 1)
       break;
+    case 'Space':
+      handleRotateTetromino()
+      break
+    case 'Enter':
+      handleFixTetromino()
+      break
+    case 'shiftKey':
+      handleStockTetromino()
+      break
   }
 
   if (event.key !== 'Space' && event.code === 'Space') {
@@ -113,6 +122,9 @@ const handleKeyPress = (event: KeyboardEvent) => {
   }
   if (event.key !== 'Enter' && event.code === 'Enter') {
     handleFixTetromino()
+  }
+  if (event.shiftKey || event.code === 'shiftKey') {
+    handleStockTetromino()
   }
 }
 
@@ -181,6 +193,28 @@ onMounted(() => {
           </div>
         </div>
       </div>
+      <div class="d-flex w-25 me-5">
+        <div class="text-center">
+          <div class="d-flex mx-4">
+            <v-icon icon="mdi-arrow-left-bold-box-outline" size="x-large"></v-icon>
+            <v-icon icon="mdi-arrow-down-bold-box-outline" size="x-large"></v-icon>
+            <v-icon icon="mdi-arrow-right-bold-box-outline" size="x-large"></v-icon>
+          </div>
+          <span>移動</span>
+        </div>
+        <div class="text-center">
+          <div class="mx-4">
+            <p class="key-icon">SHIFT</p>
+          </div>
+          <span>ストック</span>
+        </div>
+        <div class="text-center">
+          <div class="mx-4">
+            <p class="key-icon">SPACE</p>
+          </div>
+          <span>回転</span>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -202,8 +236,8 @@ onMounted(() => {
   }
 
   &-col {
-    width: 30px;
-    height: 30px;
+    width: 35px;
+    height: 35px;
     text-align: center;
     border: 0.1px solid #EEE;
   }
@@ -241,5 +275,12 @@ onMounted(() => {
   &-z {
     background: #e74c3c;
   }
+}
+
+.key-icon {
+  font-weight: 600;
+  padding: 2px 4px;
+  border-radius: 4px;
+  border: 2px solid #333;
 }
 </style>

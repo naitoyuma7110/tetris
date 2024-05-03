@@ -36,7 +36,6 @@ export class TetrominoManager {
   stockTetromino() {
     const newStockTetromino = this.activeTetromino.copyInstance()
     newStockTetromino.setPointOnField = [0, 1]
-    this.stockedTetromino = newStockTetromino
     if (this.stockedTetromino) {
       const newActiveTetromino = this.stockedTetromino.copyInstance()
       newActiveTetromino.setPointOnField = DROP_POINT
@@ -44,5 +43,6 @@ export class TetrominoManager {
     } else {
       this.createActiveTetromino()
     }
+    this.stockedTetromino = newStockTetromino
   }
 }

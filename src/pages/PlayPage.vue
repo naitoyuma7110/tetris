@@ -145,29 +145,41 @@ onMounted(() => {
             <TetrominoBox :tetromino="tetromino" />
           </div>
         </div>
-        <p class="text-subtitle-1">Stocked</p>
-        <TetrominoBox :tetromino="tetrominoManager.stockedTetromino" />
+        <p class="text-subtitle-1">ストック</p>
+        <span v-if="!tetrominoManager.stockedTetromino">なし</span>
+        <TetrominoBox v-else :tetromino="tetrominoManager.stockedTetromino" />
       </div>
       <div class=" mt-auto py-5">
         <div class="mt-10 mb-5">
-          <p class="text-end">
-            {{ `1 / ${fallSpeed} ms` }}
+          <p class="d-flex justify-space-between px-2">
+            <span>
+              ゲームスピード
+            </span>
+            <span>
+              {{ `1 / ${fallSpeed} ms` }}
+            </span>
           </p>
           <v-slider v-model="fallSpeed" :max="1000" :min="1" step="10" hide-details />
         </div>
-        <v-row class="align-center justify-center">
-          <v-btn icon="mdi-arrow-left-bold-outline" v-on:click="handleShiftTetromino(0, -1)"></v-btn>
-          <div class="d-flex flex-column">
-            <v-btn class="mb-2" icon="mdi-arrow-up-bold-outline" v-on:click="handleShiftTetromino(-1, 0)"></v-btn>
-            <v-btn class="mt-2" icon="mdi-arrow-down-bold-outline" v-on:click="handleShiftTetromino(1, 0)"></v-btn>
+        <div class="d-flex">
+          <div class="d-flex align-center justify-center">
+            <v-btn icon="mdi-arrow-left-bold-outline" v-on:click="handleShiftTetromino(0, -1)"></v-btn>
+            <div class="d-flex flex-column">
+              <v-btn class="mb-2" icon="mdi-arrow-up-bold-outline" v-on:click="handleShiftTetromino(-1, 0)"></v-btn>
+              <v-btn class="mt-2" icon="mdi-arrow-down-bold-outline" v-on:click="handleShiftTetromino(1, 0)"></v-btn>
+            </div>
+            <v-btn icon="mdi-arrow-right-bold-outline" v-on:click="handleShiftTetromino(0, 1)"></v-btn>
           </div>
-          <v-btn icon="mdi-arrow-right-bold-outline" v-on:click="handleShiftTetromino(0, 1)"></v-btn>
-        </v-row>
-        <v-row class="align-center justify-center mt-5">
-          <v-btn class="mx-2" icon="mdi-rotate-right" v-on:click="handleRotateTetromino"></v-btn>
-          <v-btn class="mx-2" icon="mdi-check-circle-outline" v-on:click="handleFixTetromino"></v-btn>
-          <v-btn class="mx-2" icon="mdi-food-takeout-box-outline" v-on:click="handleStockTetromino"></v-btn>
-        </v-row>
+          <div class="d-flex flex-column align-center mt-5 ms-5">
+            <div>
+              <v-btn class="mb-2" icon="mdi-rotate-right" v-on:click="handleRotateTetromino"></v-btn>
+            </div>
+            <div>
+              <v-btn class="mx-2" icon="mdi-check-circle-outline" v-on:click="handleFixTetromino"></v-btn>
+              <v-btn class="mx-2" icon="mdi-food-takeout-box-outline" v-on:click="handleStockTetromino"></v-btn>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>

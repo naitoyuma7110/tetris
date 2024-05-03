@@ -24,9 +24,9 @@ export class TetrominoManager {
   }
 
   createActiveTetromino() {
-    const activeTetromino = this.nextTetrominos[0].copyInstance()
-    activeTetromino.setPointOnField = DROP_POINT
-    this.activeTetromino = activeTetromino
+    const newActiveTetromino = this.nextTetrominos[0].copyInstance()
+    newActiveTetromino.setPointOnField = DROP_POINT
+    this.activeTetromino = newActiveTetromino
     this.nextTetrominos.shift()
     const nextTetromino = Tetromino.createRandomTetromino()
     nextTetromino.setPointOnField = [0, 1]
@@ -34,8 +34,15 @@ export class TetrominoManager {
   }
 
   stockTetromino() {
-    const newStockTetromino = this.getActiveCopy()
+    const newStockTetromino = this.activeTetromino.copyInstance()
     newStockTetromino.setPointOnField = [0, 1]
     this.stockedTetromino = newStockTetromino
+    if (this.stockedTetromino) {
+      const newActiveTetromino = this.stockedTetromino.copyInstance()
+      newActiveTetromino.setPointOnField = DROP_POINT
+      this.activeTetromino = newActiveTetromino
+    } else {
+      this.createActiveTetromino()
+    }
   }
 }

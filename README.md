@@ -13,6 +13,7 @@
 - vue-router
 
 ## UI・見た目
+
 ![2024-05-05_03h28_53](https://github.com/naitoyuma7110/tetris/assets/128150297/0943763c-46a5-40fc-b680-5ef6f3584fd0)
 
 ## アプリケーション構成
@@ -29,7 +30,7 @@
 
 ## 詳細ロジック
 
-テトリスの処理の中でメインとなり複雑化し易いもについてのみ図を作成して整理　
+テトリスの処理の中でメインとなり複雑化し易いもについてのみ図を作成して整理
 
 - フィールド上にテトリミノを描画する、テトリミノを移動、回転する
 
@@ -42,7 +43,6 @@
 - テトリミノの移動や回転時に壁や堆積タイルとの衝突を判定する
 
 ![image](https://github.com/naitoyuma7110/tetris/assets/128150297/356c639d-a746-4760-8c78-bb57896164ee)
-
 
 ## 開発メモ
 
@@ -62,6 +62,12 @@ Pinia(状態管理)
 vue-router(ルーティング)
 
 - セットアップ：https://v3.router.vuejs.org/ja/installation.html
+
+Vite Build設定
+
+- Vite + Vueでビルドしたが真っ白：https://qiita.com/fwzis/items/18fe1475f820b39142f5
+
+  > GithubPage公開のため"/docs"下に静的ファイルをnpm buildしたい時の参考。設定ファイルはvite.config.tsとなっている
 
 クラスインスタンスのリアクティブ化
 

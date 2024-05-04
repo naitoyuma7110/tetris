@@ -7,7 +7,7 @@ import { getBlockClass } from '@/common/utils'
 import TetrominoBox from '@/components/playPage/TetrominoBox.vue';
 
 const field = ref(new Field())
-const fieldWithFixed = ref(new Field())
+let fieldWithFixed = new Field()
 const tetrominoManager = reactive(new TetrominoManager)
 
 /**
@@ -20,7 +20,7 @@ const tetrominoManager = reactive(new TetrominoManager)
 const handleShiftTetromino = (y: number, x: number) => {
   const newTetromino = tetrominoManager.getActiveCopy()
   newTetromino.shift(y, x)
-  if (fieldWithFixed.value.isCollision(newTetromino)) {
+  if (fieldWithFixed.isCollision(newTetromino)) {
     console.log("衝突!!")
     if (y > 0) {
       handleFixTetromino()
@@ -29,7 +29,7 @@ const handleShiftTetromino = (y: number, x: number) => {
   }
 
   tetrominoManager.activeTetromino = newTetromino
-  field.value = fieldWithFixed.value.copyInstance()
+  field.value = fieldWithFixed.copyInstance()
   field.value = field.value.createFieldWithRenderTetromino(newTetromino)
 }
 
@@ -40,12 +40,12 @@ const handleShiftTetromino = (y: number, x: number) => {
 const handleRotateTetromino = () => {
   const newTetromino = tetrominoManager.getActiveCopy()
   newTetromino.rotate()
-  if (fieldWithFixed.value.isCollision(newTetromino)) {
+  if (fieldWithFixed.isCollision(newTetromino)) {
     console.log("衝突!!")
     return
   }
   tetrominoManager.activeTetromino = newTetromino
-  field.value = fieldWithFixed.value.copyInstance()
+  field.value = fieldWithFixed.copyInstance()
   field.value = field.value.createFieldWithRenderTetromino(newTetromino)
 }
 
@@ -56,10 +56,10 @@ const handleRotateTetromino = () => {
 const handleFixTetromino = () => {
   tetrominoManager.createActiveTetromino()
   const newActiveTetromino = tetrominoManager.getActiveCopy()
-  fieldWithFixed.value = field.value.copyInstance(true)
-  field.value = fieldWithFixed.value.copyInstance()
+  fieldWithFixed = field.value.copyInstance(true)
+  field.value = fieldWithFixed.copyInstance()
   field.value = field.value.createFieldWithRenderTetromino(newActiveTetromino)
-  if (fieldWithFixed.value.isGameOver) {
+  if (fieldWithFixed.isGameOver) {
     clearInterval(intervalId)
     alert("Game Over")
   }
@@ -68,7 +68,7 @@ const handleFixTetromino = () => {
 const handleStockTetromino = () => {
   tetrominoManager.stockTetromino()
   const newActiveTetromino = tetrominoManager.getActiveCopy()
-  field.value = fieldWithFixed.value.copyInstance()
+  field.value = fieldWithFixed.copyInstance()
   field.value = field.value.createFieldWithRenderTetromino(newActiveTetromino)
 
 }

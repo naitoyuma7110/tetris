@@ -10,6 +10,9 @@
 - Scss
 - vue-router
 
+## UI・見た目
+![2024-05-05_03h28_53](https://github.com/naitoyuma7110/tetris/assets/128150297/0943763c-46a5-40fc-b680-5ef6f3584fd0)
+
 ## アプリケーション構成
 
 オブジェクト指向を参考にクラスでロジック部分の役割分担を行う。
@@ -18,9 +21,26 @@
 最終的にクラスはVueファイルでインスタンス化して、各クラスメソッドを利用しユーザー操作を実現する。  
 またクラスフィールドをリアクティブ化し描画に利用する。
 
+### クラス図
+
+![image](https://github.com/naitoyuma7110/tetris/assets/128150297/250405d6-ae0d-4f9c-b3c9-4d7b01dacdeb)
+
 ## 詳細ロジック
 
-テトリスにメインとなり複雑化し易い処理についてのみ記載
+テトリスの処理の中でメインとなり複雑化し易いもについてのみ図を作成して整理　
+
+- フィールド上にテトリミノを描画する、テトリミノを移動、回転する
+
+![image](https://github.com/naitoyuma7110/tetris/assets/128150297/9307f8de-8180-4a1d-a12d-ded0231d0030)
+
+- 堆積したテトリミノをフィールドに保持する
+
+![image](https://github.com/naitoyuma7110/tetris/assets/128150297/844ee910-66e0-4f85-bd98-4df1b513e59a)
+
+- テトリミノの移動や回転時に壁や堆積タイルとの衝突を判定する
+
+![image](https://github.com/naitoyuma7110/tetris/assets/128150297/356c639d-a746-4760-8c78-bb57896164ee)
+
 
 ## 開発メモ
 

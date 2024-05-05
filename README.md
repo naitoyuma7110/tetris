@@ -64,9 +64,9 @@ vue-router(ルーティング)
 
 - セットアップ：https://v3.router.vuejs.org/ja/installation.html
 
-Github Pgages用のVite.config設定
+Github Pages用のVite.config設定
 
-- 公式ドキュメント(静的サイトのデプロイ)：[https://qiita.com/fwzis/items/18fe1475f820b39142f5](https://ja.vitejs.dev/guide/static-deploy.html#github-pages)
+- Vite公式ドキュメント(静的サイトのデプロイ)：[https://qiita.com/fwzis/items/18fe1475f820b39142f5](https://ja.vitejs.dev/guide/static-deploy.html#github-pages)
 
   > GithubPages公開のため"/docs"下に静的ファイルをnpm buildしたい時の参考。設定ファイルはvite.config.tsとなっている
 

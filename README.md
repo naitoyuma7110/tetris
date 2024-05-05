@@ -3,7 +3,7 @@
 「見ないでテトリスを書いてみよう」  
 ロジックは自己流のため適宜修正していく。
 
-https://naitoyuma7110.github.io/tetris/
+アプリURL：https://naitoyuma7110.github.io/tetris/
 
 ※構成やロジックの整理：ドキュメント/整理.drawio
 ## 使用技術

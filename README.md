@@ -29,7 +29,7 @@
 
 ![image](https://github.com/naitoyuma7110/tetris/assets/128150297/250405d6-ae0d-4f9c-b3c9-4d7b01dacdeb)
 
-## 詳細ロジック
+## ロジック詳細
 
 テトリスの処理の中でメインとなり複雑化し易いもについてのみ図を作成して整理
 

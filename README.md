@@ -3,8 +3,9 @@
 「見ないでテトリスを書いてみよう」  
 ロジックは自己流のため適宜修正していく。
 
-※構成やロジックの整理：ドキュメント/整理.drawio
+https://naitoyuma7110.github.io/tetris/
 
+※構成やロジックの整理：ドキュメント/整理.drawio
 ## 使用技術
 
 - Vue3(Composition API, Typescript)

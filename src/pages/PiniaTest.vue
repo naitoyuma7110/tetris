@@ -1,27 +1,25 @@
 <script setup lang="ts">
-import { useCounterStore } from '@/stores/counter'
+import { useCounterStore } from "@/stores/counter";
 
-const counter = useCounterStore()
-
+const counter = useCounterStore();
 
 // 管理対象に対してミュータブルで直接的な操作
 const handlCountIsTen = () => {
-  counter.count = 10
-  console.log(counter.count)
-}
+  counter.count = 10;
+  console.log(counter.count);
+};
 
 // 管理対象に対してディスパッチで操作
 const handlCountIsFive = () => {
-  counter.$patch({ count: 5 })
-  console.log(counter.count)
-}
+  counter.$patch({ count: 5 });
+  console.log(counter.count);
+};
 
 // 管理対象に対してアクションで操作
 const handlCountIsSeven = () => {
-  counter.setSeven()
-  console.log(counter.count)
-}
-
+  counter.setSeven();
+  console.log(counter.count);
+};
 </script>
 
 <template>

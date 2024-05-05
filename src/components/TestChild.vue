@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { toRefs } from 'vue';
-
+import { toRefs } from "vue";
 
 /*
   分割代入はリアクティブ性を失うため注意
@@ -9,9 +8,8 @@ import { toRefs } from 'vue';
   */
 
 // toRefsを使用してpropsの
-const props = defineProps(['testClass', 'className', 'hasClassOnField']);
+const props = defineProps(["testClass", "className", "hasClassOnField"]);
 const { testClass, className, hasClassOnField } = toRefs(props);
-
 </script>
 
 <template>

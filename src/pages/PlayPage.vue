@@ -1,14 +1,14 @@
 <script lang="ts" setup>
-import { Field } from '@/common/Field';
-import { ref, watch, onMounted, reactive } from 'vue';
-import type { TETROMINO_TYPE } from '@/common/Tetromino';
-import { TetrominoManager } from '@/common/TetrominoManager';
-import { getBlockClass } from '@/common/utils'
-import TetrominoBox from '@/components/playPage/TetrominoBox.vue';
+import { Field } from "@/common/Field";
+import { ref, watch, onMounted, reactive } from "vue";
+import type { TETROMINO_TYPE } from "@/common/Tetromino";
+import { TetrominoManager } from "@/common/TetrominoManager";
+import { getBlockClass } from "@/common/utils";
+import TetrominoBox from "@/components/playPage/TetrominoBox.vue";
 
-const field = ref(new Field())
-let fieldWithFixed = new Field()
-const tetrominoManager = reactive(new TetrominoManager)
+const field = ref(new Field());
+let fieldWithFixed = new Field();
+const tetrominoManager = reactive(new TetrominoManager());
 
 /**
  * x,yに応じてテトリミノ位置を移動させる
@@ -18,60 +18,59 @@ const tetrominoManager = reactive(new TetrominoManager)
  * @param x 横方向の座標移動距離
  */
 const handleShiftTetromino = (y: number, x: number) => {
-  const newTetromino = tetrominoManager.getActiveCopy()
-  newTetromino.shift(y, x)
+  const newTetromino = tetrominoManager.getActiveCopy();
+  newTetromino.shift(y, x);
   if (fieldWithFixed.isCollision(newTetromino)) {
-    console.log("衝突!!")
+    console.log("衝突!!");
     if (y > 0) {
-      handleFixTetromino()
+      handleFixTetromino();
     }
-    return
+    return;
   }
 
-  tetrominoManager.activeTetromino = newTetromino
-  field.value = fieldWithFixed.copyInstance()
-  field.value = field.value.createFieldWithRenderTetromino(newTetromino)
-}
+  tetrominoManager.activeTetromino = newTetromino;
+  field.value = fieldWithFixed.copyInstance();
+  field.value = field.value.createFieldWithRenderTetromino(newTetromino);
+};
 
 /**
  * テトリミノを回転させる
  * ロジックは移動とほぼ一緒だが落下判定がない
  */
 const handleRotateTetromino = () => {
-  const newTetromino = tetrominoManager.getActiveCopy()
-  newTetromino.rotate()
+  const newTetromino = tetrominoManager.getActiveCopy();
+  newTetromino.rotate();
   if (fieldWithFixed.isCollision(newTetromino)) {
-    console.log("衝突!!")
-    return
+    console.log("衝突!!");
+    return;
   }
-  tetrominoManager.activeTetromino = newTetromino
-  field.value = fieldWithFixed.copyInstance()
-  field.value = field.value.createFieldWithRenderTetromino(newTetromino)
-}
+  tetrominoManager.activeTetromino = newTetromino;
+  field.value = fieldWithFixed.copyInstance();
+  field.value = field.value.createFieldWithRenderTetromino(newTetromino);
+};
 
 /**
  * テトリミノをフィールドに固定し新しいテトリミノを落下口に出現させる
  * 堆積したタイルを持つフィールドに落下中のテトリミノの位置を追加する事で固定したテトリミノ群を保持している
  */
 const handleFixTetromino = () => {
-  tetrominoManager.createActiveTetromino()
-  const newActiveTetromino = tetrominoManager.getActiveCopy()
-  fieldWithFixed = field.value.copyInstance(true)
-  field.value = fieldWithFixed.copyInstance()
-  field.value = field.value.createFieldWithRenderTetromino(newActiveTetromino)
+  tetrominoManager.createActiveTetromino();
+  const newActiveTetromino = tetrominoManager.getActiveCopy();
+  fieldWithFixed = field.value.copyInstance(true);
+  field.value = fieldWithFixed.copyInstance();
+  field.value = field.value.createFieldWithRenderTetromino(newActiveTetromino);
   if (fieldWithFixed.isGameOver) {
-    clearInterval(intervalId)
-    alert("Game Over")
+    clearInterval(intervalId);
+    alert("Game Over");
   }
-}
+};
 
 const handleStockTetromino = () => {
-  tetrominoManager.stockTetromino()
-  const newActiveTetromino = tetrominoManager.getActiveCopy()
-  field.value = fieldWithFixed.copyInstance()
-  field.value = field.value.createFieldWithRenderTetromino(newActiveTetromino)
-
-}
+  tetrominoManager.stockTetromino();
+  const newActiveTetromino = tetrominoManager.getActiveCopy();
+  field.value = fieldWithFixed.copyInstance();
+  field.value = field.value.createFieldWithRenderTetromino(newActiveTetromino);
+};
 
 // 落下スピード制御
 const fallSpeed = ref<number>(500);
@@ -81,55 +80,56 @@ let intervalId: number = setInterval(() => {
 }, fallSpeed.value);
 
 watch(fallSpeed, (newFallSpeed) => {
-  clearInterval(intervalId)
+  clearInterval(intervalId);
   intervalId = setInterval(() => {
     handleShiftTetromino(1, 0);
   }, newFallSpeed);
 
-  console.log(newFallSpeed)
-})
-
+  console.log(newFallSpeed);
+});
 
 // キーボードイベント登録
 const handleKeyPress = (event: KeyboardEvent) => {
   switch (event.key) {
-    case 'ArrowUp':
-      handleShiftTetromino(-1, 0)
+    case "ArrowUp":
+      handleShiftTetromino(-1, 0);
       break;
-    case 'ArrowDown':
-      handleShiftTetromino(1, 0)
+    case "ArrowDown":
+      handleShiftTetromino(1, 0);
       break;
-    case 'ArrowLeft':
-      handleShiftTetromino(0, -1)
+    case "ArrowLeft":
+      handleShiftTetromino(0, -1);
       break;
-    case 'ArrowRight':
-      handleShiftTetromino(0, 1)
+    case "ArrowRight":
+      handleShiftTetromino(0, 1);
       break;
-    case 'Space':
-      handleRotateTetromino()
-      break
-    case 'Enter':
-      handleFixTetromino()
-      break
-    case 'shiftKey':
-      handleStockTetromino()
-      break
+    case "Space":
+      handleRotateTetromino();
+      break;
+    case "Enter":
+      handleFixTetromino();
+      break;
+    case "shiftKey":
+      handleStockTetromino();
+      break;
   }
 
-  if (event.key !== 'Space' && event.code === 'Space') {
-    handleRotateTetromino()
+  if (event.key !== "Space" && event.code === "Space") {
+    handleRotateTetromino();
   }
-  if (event.key !== 'Enter' && event.code === 'Enter') {
-    handleFixTetromino()
+  if (event.key !== "Enter" && event.code === "Enter") {
+    handleFixTetromino();
   }
-  if (event.shiftKey || event.code === 'shiftKey') {
-    handleStockTetromino()
+  if (event.shiftKey || event.code === "shiftKey") {
+    handleStockTetromino();
   }
-}
+};
 
 onMounted(() => {
-  document.addEventListener('keydown', handleKeyPress);
-  field.value = field.value.createFieldWithRenderTetromino(tetrominoManager.getActiveCopy())
+  document.addEventListener("keydown", handleKeyPress);
+  field.value = field.value.createFieldWithRenderTetromino(
+    tetrominoManager.getActiveCopy()
+  );
 });
 </script>
 
@@ -140,7 +140,7 @@ onMounted(() => {
   <div class="container">
     <div class="game-board">
       <div class="game-board-row" v-for="(row, y) in field.fieldData" :key="y">
-        <span class="game-board-col" v-bind:class="getBlockClass(col as (TETROMINO_TYPE))" v-for=" (col, x) in row"
+        <span class="game-board-col" v-bind:class="getBlockClass(col as (TETROMINO_TYPE))" v-for="(col, x) in row"
           :key="() => `${x}${y}`">
         </span>
       </div>
@@ -160,12 +160,10 @@ onMounted(() => {
         <span v-if="!tetrominoManager.stockedTetromino">なし</span>
         <TetrominoBox v-else :tetromino="tetrominoManager.stockedTetromino" />
       </div>
-      <div class=" mt-auto py-5">
+      <div class="mt-auto py-5">
         <div class="mt-10 mb-5">
           <p class="d-flex justify-space-between px-2">
-            <span>
-              ゲームスピード
-            </span>
+            <span> ゲームスピード </span>
             <span>
               {{ `1 / ${fallSpeed} ms` }}
             </span>
@@ -217,7 +215,6 @@ onMounted(() => {
     </div>
   </div>
 </template>
-
 <style lang="scss">
 .container {
   margin-top: 20px;
@@ -238,7 +235,7 @@ onMounted(() => {
     width: 35px;
     height: 35px;
     text-align: center;
-    border: 0.1px solid #EEE;
+    border: 0.1px solid #eee;
   }
 }
 

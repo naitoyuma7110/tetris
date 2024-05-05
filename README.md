@@ -27,7 +27,7 @@
 
 ### クラス図
 
-![image](https://github.com/naitoyuma7110/tetris/assets/128150297/250405d6-ae0d-4f9c-b3c9-4d7b01dacdeb)
+![image](https://github.com/naitoyuma7110/tetris/assets/128150297/cb0bb880-e235-4c09-9c79-081d88e54293)
 
 ## ロジック詳細
 

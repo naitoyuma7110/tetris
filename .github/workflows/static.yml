@@ -4,7 +4,7 @@ name: Deploy static content to GitHub Pages
 on:
   # デフォルトブランチを対象としたプッシュ時にで実行
   push:
-    branches: ["main"]
+    branches: ['main']
 
   # Actions タブから手動でワークフローを実行
   workflow_dispatch:
@@ -17,7 +17,7 @@ permissions:
 
 # Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
 concurrency:
-  group: "pages"
+  group: 'pages'
   cancel-in-progress: false
 
 jobs:

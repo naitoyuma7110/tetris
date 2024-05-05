@@ -64,7 +64,7 @@ vue-router(ルーティング)
 
 - セットアップ：https://v3.router.vuejs.org/ja/installation.html
 
-Github Pgages用のVite Build設定
+Github Pgages用のVite.config設定
 
 - 公式ドキュメント(静的サイトのデプロイ)：[https://qiita.com/fwzis/items/18fe1475f820b39142f5](https://ja.vitejs.dev/guide/static-deploy.html#github-pages)
 

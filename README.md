@@ -64,11 +64,11 @@ vue-router(ルーティング)
 
 - セットアップ：https://v3.router.vuejs.org/ja/installation.html
 
-Vite Build設定
+Github Pgages用のVite Build設定
 
-- Vite + Vueでビルドしたが真っ白：https://qiita.com/fwzis/items/18fe1475f820b39142f5
+- 公式ドキュメント(静的サイトのデプロイ)：[https://qiita.com/fwzis/items/18fe1475f820b39142f5](https://ja.vitejs.dev/guide/static-deploy.html#github-pages)
 
-  > GithubPage公開のため"/docs"下に静的ファイルをnpm buildしたい時の参考。設定ファイルはvite.config.tsとなっている
+  > GithubPages公開のため"/docs"下に静的ファイルをnpm buildしたい時の参考。設定ファイルはvite.config.tsとなっている
 
 クラスインスタンスのリアクティブ化
 

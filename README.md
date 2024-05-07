@@ -5,7 +5,8 @@
 
 アプリURL：https://naitoyuma7110.github.io/tetris/
 
-※構成やロジックの整理：[/ドキュメント/整理.drawio](https://github.com/naitoyuma7110/tetris/blob/main/%E3%83%89%E3%82%AD%E3%83%A5%E3%83%A1%E3%83%B3%E3%83%88/%E6%95%B4%E7%90%86%E5%9B%B3.drawio)
+Qiita記事を書き始める：https://qiita.com/naitoyuma/items/8dcbf6b64dbddffe0383
+
 ## 使用技術
 
 - Vue3(Composition API, Typescript)

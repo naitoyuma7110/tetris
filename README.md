@@ -10,8 +10,8 @@ Qiita記事を書き始める：https://qiita.com/naitoyuma/items/8dcbf6b64dbddf
 ## 使用技術
 
 - Vue3(Composition API, Typescript)
+- Vite(モジュールバンドラ)
 - Vuetify3(デザインFW)
-- Scss
 - vue-router
 
 ## UI・見た目

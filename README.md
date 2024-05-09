@@ -5,7 +5,7 @@
 
 アプリURL：https://naitoyuma7110.github.io/tetris/
 
-Qiita記事を書き始める：https://qiita.com/naitoyuma/items/8dcbf6b64dbddffe0383
+Qiita記事：https://qiita.com/naitoyuma/items/8dcbf6b64dbddffe0383
 
 ## 使用技術
 

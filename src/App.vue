@@ -1,5 +1,4 @@
-<script setup lang="ts">
-</script>
+<script setup lang="ts"></script>
 
 <template>
   <v-app>
@@ -17,8 +16,4 @@
 .v-application__wrap {
   min-height: 80vh !important;
 }
-
-/* [data-vuetify] .v-application--wrap {
-  min-height: 0vh !important;
-} */
 </style>

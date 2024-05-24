@@ -5,6 +5,7 @@ import PlayPage from '@/pages/PlayPage.vue'
 import PiniaTest from '@/pages/PiniaTest.vue'
 import TestPage from '@/pages/TestPage.vue'
 import TestPage2 from '@/pages/TestPage2.vue'
+import QiitaDemo from '@/pages/QiitaDemo.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -33,6 +34,11 @@ const router = createRouter({
       path: '/pinia',
       name: 'PiniaTest',
       component: PiniaTest
+    },
+    {
+      path: '/qiita',
+      name: 'QiitaPage',
+      component: QiitaDemo
     }
   ]
 })

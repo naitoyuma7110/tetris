@@ -57,7 +57,7 @@ Vuetify3(デザインフレームワーク)
 
 - chromeデバックツール：https://chromewebstore.google.com/detail/vuejs-devtools/nhdogjmejiglipccpnnnanhbledajbpd
 
-Pinia(状態管理)
+Pinia(状態管理) ※特に使わなかった
 
 - セットアップ：https://pinia.vuejs.org/introduction.html
 

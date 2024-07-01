@@ -34,7 +34,9 @@ export class TetrominoManager {
   }
 
   stockTetromino() {
-    const newStockTetromino = this.activeTetromino.copyInstance()
+    // const newStockTetromino = this.activeTetromino.copyInstance()
+    // TODO：本当は直インスタンス化は管理しにくいからダメ
+    const newStockTetromino = new Tetromino(this.activeTetromino.tetrominoType)
     newStockTetromino.setPointOnField = [0, 1]
     if (this.stockedTetromino) {
       const newActiveTetromino = this.stockedTetromino.copyInstance()

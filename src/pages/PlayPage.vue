@@ -1,14 +1,15 @@
 <script lang="ts" setup>
-import { Field } from "@/common/Field";
-import { ref, watch, onMounted, reactive } from "vue";
-import type { TETROMINO_TYPE } from "@/common/Tetromino";
-import { TetrominoManager } from "@/common/TetrominoManager";
-import { getBlockClass } from "@/common/utils";
-import TetrominoBox from "@/components/playPage/TetrominoBox.vue";
+import { Field } from '@/common/Field'
+import { ref, watch, onMounted, reactive } from 'vue'
+import type { TETROMINO_TYPE } from '@/common/Tetromino'
+import { TetrominoManager } from '@/common/TetrominoManager'
+import { getBlockClass } from '@/common/utils'
+import TetrominoBox from '@/components/playPage/TetrominoBox.vue'
+import router from '@/router'
 
-const field = ref(new Field());
-let fieldWithFixed = new Field();
-const tetrominoManager = reactive(new TetrominoManager());
+const field = ref(new Field())
+let fieldWithFixed = new Field()
+const tetrominoManager = reactive(new TetrominoManager())
 
 /**
  * x,yに応じてテトリミノ位置を移動させる
@@ -18,119 +19,118 @@ const tetrominoManager = reactive(new TetrominoManager());
  * @param x 横方向の座標移動距離
  */
 const handleShiftTetromino = (y: number, x: number) => {
-  const newTetromino = tetrominoManager.getActiveCopy();
-  newTetromino.shift(y, x);
+  const newTetromino = tetrominoManager.getActiveCopy()
+  newTetromino.shift(y, x)
   if (fieldWithFixed.isCollision(newTetromino)) {
-    console.log("衝突!!");
+    console.log('衝突!!')
     if (y > 0) {
-      handleFixTetromino();
+      handleFixTetromino()
     }
-    return;
+    return
   }
 
-  tetrominoManager.activeTetromino = newTetromino;
-  field.value = fieldWithFixed.copyInstance();
-  field.value = field.value.createFieldWithRenderTetromino(newTetromino);
-};
+  tetrominoManager.activeTetromino = newTetromino
+  field.value = fieldWithFixed.copyInstance()
+  field.value = field.value.createFieldWithRenderTetromino(newTetromino)
+}
 
 /**
  * テトリミノを回転させる
  * ロジックは移動とほぼ一緒だが落下判定がない
  */
 const handleRotateTetromino = () => {
-  const newTetromino = tetrominoManager.getActiveCopy();
-  newTetromino.rotate();
+  const newTetromino = tetrominoManager.getActiveCopy()
+  newTetromino.rotate()
   if (fieldWithFixed.isCollision(newTetromino)) {
-    console.log("衝突!!");
-    return;
+    console.log('衝突!!')
+    return
   }
-  tetrominoManager.activeTetromino = newTetromino;
-  field.value = fieldWithFixed.copyInstance();
-  field.value = field.value.createFieldWithRenderTetromino(newTetromino);
-};
+  tetrominoManager.activeTetromino = newTetromino
+  field.value = fieldWithFixed.copyInstance()
+  field.value = field.value.createFieldWithRenderTetromino(newTetromino)
+}
 
 /**
  * テトリミノをフィールドに固定し新しいテトリミノを落下口に出現させる
  * 堆積したタイルを持つフィールドに落下中のテトリミノの位置を追加する事で固定したテトリミノ群を保持している
  */
 const handleFixTetromino = () => {
-  tetrominoManager.createActiveTetromino();
-  const newActiveTetromino = tetrominoManager.getActiveCopy();
-  fieldWithFixed = field.value.copyInstance(true);
-  field.value = fieldWithFixed.copyInstance();
-  field.value = field.value.createFieldWithRenderTetromino(newActiveTetromino);
+  tetrominoManager.createActiveTetromino()
+  const newActiveTetromino = tetrominoManager.getActiveCopy()
+  fieldWithFixed = field.value.copyInstance(true)
+  field.value = fieldWithFixed.copyInstance()
+  field.value = field.value.createFieldWithRenderTetromino(newActiveTetromino)
   if (fieldWithFixed.isGameOver) {
-    clearInterval(intervalId);
-    alert("Game Over");
+    clearInterval(intervalId)
+    alert('Game Over')
+    router.push('/')
   }
-};
+}
 
 const handleStockTetromino = () => {
-  tetrominoManager.stockTetromino();
-  const newActiveTetromino = tetrominoManager.getActiveCopy();
-  field.value = fieldWithFixed.copyInstance();
-  field.value = field.value.createFieldWithRenderTetromino(newActiveTetromino);
-};
+  tetrominoManager.stockTetromino()
+  const newActiveTetromino = tetrominoManager.getActiveCopy()
+  field.value = fieldWithFixed.copyInstance()
+  field.value = field.value.createFieldWithRenderTetromino(newActiveTetromino)
+}
 
 // 落下スピード制御
-const fallSpeed = ref<number>(500);
+const fallSpeed = ref<number>(500)
 
 let intervalId: number = setInterval(() => {
-  handleShiftTetromino(1, 0);
-}, fallSpeed.value);
+  handleShiftTetromino(1, 0)
+}, fallSpeed.value)
 
 watch(fallSpeed, (newFallSpeed) => {
-  clearInterval(intervalId);
+  clearInterval(intervalId)
   intervalId = setInterval(() => {
-    handleShiftTetromino(1, 0);
-  }, newFallSpeed);
+    handleShiftTetromino(1, 0)
+  }, newFallSpeed)
 
-  console.log(newFallSpeed);
-});
+  console.log(newFallSpeed)
+})
 
 // キーボードイベント登録
 const handleKeyPress = (event: KeyboardEvent) => {
   switch (event.key) {
-    case "ArrowUp":
-      handleShiftTetromino(-1, 0);
-      break;
-    case "ArrowDown":
-      handleShiftTetromino(1, 0);
-      break;
-    case "ArrowLeft":
-      handleShiftTetromino(0, -1);
-      break;
-    case "ArrowRight":
-      handleShiftTetromino(0, 1);
-      break;
-    case "Space":
-      handleRotateTetromino();
-      break;
-    case "Enter":
-      handleFixTetromino();
-      break;
-    case "shiftKey":
-      handleStockTetromino();
-      break;
+    case 'ArrowUp':
+      handleShiftTetromino(-1, 0)
+      break
+    case 'ArrowDown':
+      handleShiftTetromino(1, 0)
+      break
+    case 'ArrowLeft':
+      handleShiftTetromino(0, -1)
+      break
+    case 'ArrowRight':
+      handleShiftTetromino(0, 1)
+      break
+    case 'Space':
+      handleRotateTetromino()
+      break
+    case 'Enter':
+      handleFixTetromino()
+      break
+    case 'shiftKey':
+      handleStockTetromino()
+      break
   }
 
-  if (event.key !== "Space" && event.code === "Space") {
-    handleRotateTetromino();
+  if (event.key !== 'Space' && event.code === 'Space') {
+    handleRotateTetromino()
   }
-  if (event.key !== "Enter" && event.code === "Enter") {
-    handleFixTetromino();
+  if (event.key !== 'Enter' && event.code === 'Enter') {
+    handleFixTetromino()
   }
-  if (event.shiftKey || event.code === "shiftKey") {
-    handleStockTetromino();
+  if (event.shiftKey || event.code === 'shiftKey') {
+    handleStockTetromino()
   }
-};
+}
 
 onMounted(() => {
-  document.addEventListener("keydown", handleKeyPress);
-  field.value = field.value.createFieldWithRenderTetromino(
-    tetrominoManager.getActiveCopy()
-  );
-});
+  document.addEventListener('keydown', handleKeyPress)
+  field.value = field.value.createFieldWithRenderTetromino(tetrominoManager.getActiveCopy())
+})
 </script>
 
 <template>
@@ -140,8 +140,12 @@ onMounted(() => {
   <div class="container">
     <div class="game-board">
       <div class="game-board-row" v-for="(row, y) in field.fieldData" :key="y">
-        <span class="game-board-col" v-bind:class="getBlockClass(col as (TETROMINO_TYPE))" v-for="(col, x) in row"
-          :key="() => `${x}${y}`">
+        <span
+          class="game-board-col"
+          v-bind:class="getBlockClass(col as TETROMINO_TYPE)"
+          v-for="(col, x) in row"
+          :key="() => `${x}${y}`"
+        >
         </span>
       </div>
     </div>
@@ -151,7 +155,7 @@ onMounted(() => {
         <div class="d-flex mb-4">
           <div class="me-4" v-for="(tetromino, i) in tetrominoManager.nextTetrominos" :key="i">
             <p class="text-subtitle-1">
-              {{ i === 0 ? "Next" : "2nd" }}
+              {{ i === 0 ? 'Next' : '2nd' }}
             </p>
             <TetrominoBox :tetromino="tetromino" />
           </div>
@@ -172,20 +176,46 @@ onMounted(() => {
         </div>
         <div class="d-flex">
           <div class="d-flex align-center justify-center">
-            <v-btn icon="mdi-arrow-left-bold-outline" v-on:click="handleShiftTetromino(0, -1)"></v-btn>
+            <v-btn
+              icon="mdi-arrow-left-bold-outline"
+              v-on:click="handleShiftTetromino(0, -1)"
+            ></v-btn>
             <div class="d-flex flex-column">
-              <v-btn class="mb-2" icon="mdi-arrow-up-bold-outline" v-on:click="handleShiftTetromino(-1, 0)"></v-btn>
-              <v-btn class="mt-2" icon="mdi-arrow-down-bold-outline" v-on:click="handleShiftTetromino(1, 0)"></v-btn>
+              <v-btn
+                class="mb-2"
+                icon="mdi-arrow-up-bold-outline"
+                v-on:click="handleShiftTetromino(-1, 0)"
+              ></v-btn>
+              <v-btn
+                class="mt-2"
+                icon="mdi-arrow-down-bold-outline"
+                v-on:click="handleShiftTetromino(1, 0)"
+              ></v-btn>
             </div>
-            <v-btn icon="mdi-arrow-right-bold-outline" v-on:click="handleShiftTetromino(0, 1)"></v-btn>
+            <v-btn
+              icon="mdi-arrow-right-bold-outline"
+              v-on:click="handleShiftTetromino(0, 1)"
+            ></v-btn>
           </div>
           <div class="d-flex flex-column align-center mt-5 ms-5">
             <div>
-              <v-btn class="mb-2" icon="mdi-rotate-right" v-on:click="handleRotateTetromino"></v-btn>
+              <v-btn
+                class="mb-2"
+                icon="mdi-rotate-right"
+                v-on:click="handleRotateTetromino"
+              ></v-btn>
             </div>
             <div>
-              <v-btn class="mx-2" icon="mdi-check-circle-outline" v-on:click="handleFixTetromino"></v-btn>
-              <v-btn class="mx-2" icon="mdi-food-takeout-box-outline" v-on:click="handleStockTetromino"></v-btn>
+              <v-btn
+                class="mx-2"
+                icon="mdi-check-circle-outline"
+                v-on:click="handleFixTetromino"
+              ></v-btn>
+              <v-btn
+                class="mx-2"
+                icon="mdi-food-takeout-box-outline"
+                v-on:click="handleStockTetromino"
+              ></v-btn>
             </div>
           </div>
         </div>
